@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微网交易机器人 - 智能问答</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                微网交易机器人
+            </div>
+            <ul class="sidebar-menu">
+                <li><span class="icon">🏠</span>首页</li>
+                <li class="active"><span class="icon">💬</span>智能问答</li>
+                <li><span class="icon">📊</span>周报管理</li>
+                <li><span class="icon">📚</span>知识库</li>
+                <li><span class="icon">📈</span>数据统计</li>
+                <li><span class="icon">👤</span>个人中心</li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div class="header-title">智能问答</div>
+                <nav class="header-menu">
+                    <a href="index.html">首页</a>
+                    <a href="chat.html" class="active">智能问答</a>
+                    <a href="reports.html">周报管理</a>
+                    <a href="knowledge.html">知识库</a>
+                    <a href="stats.html">数据统计</a>
+                </nav>
+                <div class="user-info">
+                    <span>运营人员</span>
+                    <div class="user-avatar">运</div>
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <h3>💬 智慧排程咨询</h3>
+                        <div>
+                            <button class="btn btn-sm btn-secondary">📜 历史记录</button>
+                            <button class="btn btn-sm btn-secondary">🗑️ 清空</button>
+                        </div>
+                    </div>
+                    <div class="chat-messages">
+                        <div class="msg msg-bot">
+                            <div class="msg-avatar">🤖</div>
+                            <div class="msg-bubble">
+                                你好！我是<strong>微网交易机器人</strong>，你的智慧排程助手。<br><br>
+                                我可以帮你解答以下问题：<br>
+                                • 排程执行结果怎么样？<br>
+                                • 为什么这样排程？<br>
+                                • 收益达到最大化了吗？<br>
+                                • 设备运行正常吗？<br>
+                                • 光伏预测接下来会大发吗？<br>
+                                • 电价走势是什么样的？<br><br>
+                                请直接输入你的问题，我会给出答案和图表分析。
+                            </div>
+                        </div>
+                        <div class="msg msg-user">
+                            <div class="msg-avatar">运</div>
+                            <div class="msg-bubble">今天排程执行结果怎么样？</div>
+                        </div>
+                        <div class="msg msg-bot">
+                            <div class="msg-avatar">🤖</div>
+                            <div class="msg-bubble">
+                                <strong>📊 排程执行结果</strong><br><br>
+                                今日排程执行正常，综合执行达标率 <strong>96%</strong>。<br><br>
+                                <strong>核心指标：</strong><br>
+                                • 储能充放电完成率：<strong>98%</strong><br>
+                                • 峰谷套利执行率：<strong>95%</strong><br>
+                                • 绿电消纳率：<strong>92%</strong><br>
+                                • 异常告警次数：<strong>0次</strong><br><br>
+                                <div class="chart-placeholder">📈 排程执行趋势图（点击查看大图）</div>
+                            </div>
+                        </div>
+                        <div class="msg msg-user">
+                            <div class="msg-avatar">运</div>
+                            <div class="msg-bubble">为什么在这个时间段是这样排程的？</div>
+                        </div>
+                        <div class="msg msg-bot">
+                            <div class="msg-avatar">🤖</div>
+                            <div class="msg-bubble">
+                                <strong>🔍 排程逻辑解释</strong><br><br>
+                                当前排程策略基于以下因素综合决策：<br><br>
+                                <strong>1. 电价因素</strong><br>
+                                当前处于<strong>谷时</strong>（10:00-14:00），电价0.38元/kWh，适合充电<br><br>
+                                <strong>2. 负荷预测</strong><br>
+                                预测下午14:00-18:00负荷较高，需提前储能<br><br>
+                                <strong>3. 光伏出力</strong><br>
+                                预计中午12:00光伏大发，优先消纳绿电<br><br>
+                                <div class="chart-placeholder">📊 关键参数可视化图表</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quick-questions">
+                        <button class="quick-btn">今天排程执行结果怎么样？</button>
+                        <button class="quick-btn">为什么这样排程？</button>
+                        <button class="quick-btn">收益达到最大化了吗？</button>
+                        <button class="quick-btn">设备运行正常吗？</button>
+                        <button class="quick-btn">光伏预测接下来会大发吗？</button>
+                        <button class="quick-btn">电价走势是什么样的？</button>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" class="chat-input" placeholder="请输入您的问题，例如：今天排程执行结果怎么样？">
+                        <button class="btn btn-primary">发送</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

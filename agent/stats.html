@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微网交易机器人 - 数据统计</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                微网交易机器人
+            </div>
+            <ul class="sidebar-menu">
+                <li><span class="icon">🏠</span>首页</li>
+                <li><span class="icon">💬</span>智能问答</li>
+                <li><span class="icon">📊</span>周报管理</li>
+                <li><span class="icon">📚</span>知识库</li>
+                <li class="active"><span class="icon">📈</span>数据统计</li>
+                <li><span class="icon">👤</span>个人中心</li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div class="header-title">数据统计</div>
+                <nav class="header-menu">
+                    <a href="index.html">首页</a>
+                    <a href="chat.html">智能问答</a>
+                    <a href="reports.html">周报管理</a>
+                    <a href="knowledge.html">知识库</a>
+                    <a href="stats.html" class="active">数据统计</a>
+                </nav>
+                <div class="user-info">
+                    <span>运营人员</span>
+                    <div class="user-avatar">运</div>
+                </div>
+            </header>
+
+            <div class="content">
+                <h1 class="page-title">数据统计</h1>
+                <p class="page-subtitle">问答满意度评价与审核时效统计分析</p>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary">📅 本周</button>
+                    <button class="btn btn-secondary">📅 本月</button>
+                    <button class="btn btn-secondary">📅 本季度</button>
+                    <button class="btn btn-secondary">📥 导出报表</button>
+                </div>
+
+                <div class="kpi-row">
+                    <div class="kpi-card">
+                        <div class="icon">💬</div>
+                        <div class="value">1,247</div>
+                        <div class="label">累计问答总数</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="icon">🎯</div>
+                        <div class="value">92%</div>
+                        <div class="label">问题识别准确率</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="icon">✅</div>
+                        <div class="value">88%</div>
+                        <div class="label">问题解决率</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="icon">⚡</div>
+                        <div class="value">-72%</div>
+                        <div class="label">审核时效缩短</div>
+                    </div>
+                </div>
+
+                <div class="stats-charts">
+                    <div class="chart-card">
+                        <h4>📊 问答趋势（近4周）</h4>
+                        <div class="chart-placeholder">
+                            <div style="display: flex; align-items: flex-end; justify-content: space-around; height: 180px; padding: 20px;">
+                                <div style="text-align: center;">
+                                    <div style="background: linear-gradient(to top, #3b82f6, #60a5fa); width: 40px; height: 80px; border-radius: 4px 4px 0 0;"></div>
+                                    <div style="font-size: 12px; color: #666; margin-top: 8px;">W14</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="background: linear-gradient(to top, #3b82f6, #60a5fa); width: 40px; height: 100px; border-radius: 4px 4px 0 0;"></div>
+                                    <div style="font-size: 12px; color: #666; margin-top: 8px;">W15</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="background: linear-gradient(to top, #3b82f6, #60a5fa); width: 40px; height: 120px; border-radius: 4px 4px 0 0;"></div>
+                                    <div style="font-size: 12px; color: #666; margin-top: 8px;">W16</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="background: linear-gradient(to top, #3b82f6, #60a5fa); width: 40px; height: 140px; border-radius: 4px 4px 0 0;"></div>
+                                    <div style="font-size: 12px; color: #666; margin-top: 8px;">W17</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h4>⭐ 满意度分布</h4>
+                        <div class="chart-placeholder">
+                            <div style="display: flex; align-items: center; justify-content: space-around; height: 180px;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 48px; color: #10b981;">😊</div>
+                                    <div style="font-size: 20px; font-weight: 600; color: #1e3a5f;">75%</div>
+                                    <div style="font-size: 12px; color: #666;">满意</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 48px; color: #f59e0b;">😐</div>
+                                    <div style="font-size: 20px; font-weight: 600; color: #1e3a5f;">18%</div>
+                                    <div style="font-size: 12px; color: #666;">一般</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 48px; color: #ef4444;">😞</div>
+                                    <div style="font-size: 20px; font-weight: 600; color: #1e3a5f;">7%</div>
+                                    <div style="font-size: 12px; color: #666;">不满意</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>📝 近期问答记录</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>时间</th>
+                                <th>问题内容</th>
+                                <th>答案摘要</th>
+                                <th>满意度</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2026-04-27 14:32</td>
+                                <td>今天排程执行结果怎么样？</td>
+                                <td>综合执行达标率96%，充放电完成率98%</td>
+                                <td><span style="color: #10b981;">😊 满意</span></td>
+                            </tr>
+                            <tr>
+                                <td>2026-04-27 11:25</td>
+                                <td>为什么这个时间段是这样排程的？</td>
+                                <td>基于电价、负荷预测、光伏出力等因素综合决策</td>
+                                <td><span style="color: #10b981;">😊 满意</span></td>
+                            </tr>
+                            <tr>
+                                <td>2026-04-26 16:48</td>
+                                <td>收益达到最大化了吗？</td>
+                                <td>当前收益占理论最大收益的92%</td>
+                                <td><span style="color: #f59e0b;">😐 一般</span></td>
+                            </tr>
+                            <tr>
+                                <td>2026-04-26 10:15</td>
+                                <td>设备运行正常吗？</td>
+                                <td>储能、光伏、充电桩设备均正常运行</td>
+                                <td><span style="color: #10b981;">😊 满意</span></td>
+                            </tr>
+                            <tr>
+                                <td>2026-04-25 09:30</td>
+                                <td>光伏预测接下来会大发吗？</td>
+                                <td>预计明天中午12点光伏大发，发电量可达...</td>
+                                <td><span style="color: #10b981;">😊 满意</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card" style="margin-top: 24px;">
+                    <div class="card-header">审核时效统计</div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+                            <div style="text-align: center; padding: 20px; background: #f9fafb; border-radius: 8px;">
+                                <div style="font-size: 36px; font-weight: 700; color: #3b82f6;">2.3h</div>
+                                <div style="font-size: 14px; color: #666; margin-top: 8px;">平均审核时长</div>
+                                <div style="font-size: 12px; color: #10b981; margin-top: 4px;">目标：< 4h</div>
+                            </div>
+                            <div style="text-align: center; padding: 20px; background: #f9fafb; border-radius: 8px;">
+                                <div style="font-size: 36px; font-weight: 700; color: #10b981;">96%</div>
+                                <div style="font-size: 14px; color: #666; margin-top: 8px;">一次性通过率</div>
+                                <div style="font-size: 12px; color: #10b981; margin-top: 4px;">目标：≥ 90%</div>
+                            </div>
+                            <div style="text-align: center; padding: 20px; background: #f9fafb; border-radius: 8px;">
+                                <div style="font-size: 36px; font-weight: 700; color: #8b5cf6;">24</div>
+                                <div style="font-size: 14px; color: #666; margin-top: 8px;">本周审核数量</div>
+                                <div style="font-size: 12px; color: #666; margin-top: 4px;">全部已审核</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
