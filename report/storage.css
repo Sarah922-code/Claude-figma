@@ -1,0 +1,345 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: #0d1117;
+  color: #e6edf3;
+  min-height: 100vh;
+}
+.page-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.page-title {
+  text-align: center;
+  font-size: 16px;
+  color: #1f1f1f;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #0f1923 0%, #162030 100%);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+.project-info { display: flex; align-items: center; gap: 12px; }
+.project-icon {
+  width: 36px; height: 36px;
+  background: #3b82f6;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.project-name { font-size: 16px; font-weight: 600; color: #e6edf3; }
+.project-id { font-size: 11px; color: #8b949e; margin-top: 2px; }
+.report-meta { text-align: right; }
+.report-period { font-size: 11px; color: #8b949e; }
+.report-type {
+  font-size: 12px;
+  color: #3b82f6;
+  background: rgba(59,130,246,0.1);
+  padding: 2px 10px;
+  border-radius: 10px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+/* Info cards row */
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.info-card {
+  background: linear-gradient(135deg, #0f1923 0%, #162030 100%);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+.info-card-label { font-size: 11px; color: #8b949e; margin-bottom: 6px; }
+.info-card-value { font-size: 16px; font-weight: 600; color: #e6edf3; }
+.info-card-value.green { color: #34d399; }
+
+/* Section */
+.section {
+  background: linear-gradient(135deg, #0f1923 0%, #162030 100%);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #3b82f6;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.section-title::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+
+/* Summary cards */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.summary-card {
+  background: linear-gradient(135deg, #141c28 0%, #1a2636 100%);
+  border-radius: 10px;
+  padding: 16px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.summary-card .label { font-size: 11px; color: #8b949e; margin-bottom: 8px; }
+.summary-card .value { font-size: 28px; font-weight: 700; color: #e6edf3; }
+.summary-card .unit { font-size: 11px; color: #8b949e; margin-top: 4px; }
+.summary-card .badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 9px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  color: #34d399;
+  background: rgba(52,211,153,0.12);
+}
+.summary-card .sub-info { font-size: 11px; margin-top: 8px; }
+.summary-card .sub-info .up { color: #34d399; }
+.summary-card .sub-info .down { color: #f87171; }
+
+/* Chart placeholder */
+.chart-area {
+  background: #141c28;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 12px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.chart-label { font-size: 12px; color: #8b949e; text-align: center; line-height: 1.8; }
+.chart-title-text { font-size: 13px; color: #e6edf3; margin-bottom: 4px; }
+
+/* Diagnosis */
+.diagnosis-box {
+  background: #141c28;
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+}
+.diagnosis-title {
+  font-size: 12px;
+  color: #3b82f6;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.diagnosis-text {
+  font-size: 11px;
+  color: #c9d1d9;
+  line-height: 1.8;
+}
+.diagnosis-text .highlight { color: #34d399; }
+.diagnosis-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.diagnosis-sub {
+  background: #0f1923;
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+.diagnosis-sub .sub-title {
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.diagnosis-sub .sub-title.blue { color: #3b82f6; }
+.diagnosis-sub .sub-title.yellow { color: #fbbf24; }
+.diagnosis-sub ul { list-style: none; padding: 0; }
+.diagnosis-sub li {
+  font-size: 10.5px;
+  color: #c9d1d9;
+  line-height: 1.8;
+  padding-left: 12px;
+  position: relative;
+}
+.diagnosis-sub li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #4a5568;
+}
+
+/* Equipment cards */
+.equip-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.equip-card {
+  background: #141c28;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.equip-card .label { font-size: 10px; color: #8b949e; margin-bottom: 6px; }
+.equip-card .value { font-size: 20px; font-weight: 700; color: #e6edf3; }
+.equip-card .sub { font-size: 10px; color: #8b949e; margin-top: 4px; }
+.equip-card .change-up { color: #34d399; font-size: 10px; }
+.equip-card .change-down { color: #f87171; font-size: 10px; }
+.equip-card .change-flat { color: #8b949e; font-size: 10px; }
+
+/* Daily run chart */
+.daily-chart {
+  background: #141c28;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+  min-height: 260px;
+}
+.daily-chart .chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.daily-chart .chart-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 10px;
+  color: #8b949e;
+}
+.daily-chart .legend-item { display: flex; align-items: center; gap: 4px; }
+.daily-chart .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+.daily-chart .legend-dot.blue { background: #3b82f6; }
+.daily-chart .legend-dot.green { background: #34d399; }
+.daily-chart .legend-dot.orange { background: #fbbf24; }
+
+/* Bar chart */
+.bar-chart-container {
+  position: relative;
+  height: 180px;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  padding: 0 10px;
+}
+.bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.bar-pair {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+  width: 100%;
+}
+.bar {
+  width: 50%;
+  border-radius: 2px 2px 0 0;
+  min-height: 2px;
+}
+.bar.charge { background: #3b82f6; }
+.bar.discharge { background: #34d399; }
+.bar-date {
+  font-size: 8px;
+  color: #4a5568;
+  margin-top: 4px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 24px;
+}
+
+/* Table */
+.table-section {
+  background: #141c28;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.table-title { font-size: 12px; font-weight: 600; color: #e6edf3; }
+.table-count { font-size: 10px; color: #8b949e; }
+.table-export {
+  font-size: 10px;
+  color: #3b82f6;
+  background: rgba(59,130,246,0.1);
+  padding: 4px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+thead th {
+  text-align: left;
+  padding: 8px 6px;
+  color: #8b949e;
+  font-weight: 500;
+  border-bottom: 1px solid #1a2636;
+  white-space: nowrap;
+}
+tbody td {
+  padding: 7px 6px;
+  color: #c9d1d9;
+  border-bottom: 1px solid rgba(26,38,54,0.5);
+  white-space: nowrap;
+}
+tbody tr:hover { background: rgba(59,130,246,0.05); }
+.status-ok { color: #34d399; }
+.status-warn { color: #f87171; }
+.status-blue { color: #3b82f6; }
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 16px 0 8px;
+  font-size: 10px;
+  color: #4a5568;
+  line-height: 1.8;
+}
+.footer .logo { color: #fbbf24; font-weight: 600; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0d1117; }
+::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 2px; }
