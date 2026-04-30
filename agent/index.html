@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微网交易机器人 - 首页</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                微网交易机器人
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active"><span class="icon">🏠</span>首页</li>
+                <li><span class="icon">💬</span>智能问答</li>
+                <li><span class="icon">📊</span>周报管理</li>
+                <li><span class="icon">📚</span>知识库</li>
+                <li><span class="icon">📈</span>数据统计</li>
+                <li><span class="icon">👤</span>个人中心</li>
+            </ul>
+        </aside>
+
+        <!-- 主内容 -->
+        <main class="main-content">
+            <header class="header">
+                <div class="header-title">首页</div>
+                <nav class="header-menu">
+                    <a href="index.html" class="active">首页</a>
+                    <a href="chat.html">智能问答</a>
+                    <a href="reports.html">周报管理</a>
+                    <a href="knowledge.html">知识库</a>
+                    <a href="stats.html">数据统计</a>
+                </nav>
+                <div class="user-info">
+                    <span>运营人员</span>
+                    <div class="user-avatar">运</div>
+                </div>
+            </header>
+
+            <div class="content">
+                <h1 class="page-title">欢迎回来</h1>
+                <p class="page-subtitle">微网交易机器人 v1.2 · 问题识别准确率≥90% · 问题解决率≥85%</p>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="location.href='chat.html'">发起问答</button>
+                    <button class="btn btn-secondary" onclick="location.href='reports.html'">查看周报</button>
+                    <button class="btn btn-secondary" onclick="location.href='knowledge.html'">知识库</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="label"><span>📊</span> 今日问答数</div>
+                        <div class="value">24</div>
+                        <div class="trend up">↑ 较昨日 +5</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label"><span>🎯</span> 问题识别准确率</div>
+                        <div class="value success">92%</div>
+                        <div class="trend up">↑ 目标 ≥90%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label"><span>✅</span> 问题解决率</div>
+                        <div class="value success">88%</div>
+                        <div class="trend up">↑ 目标 ≥85%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label"><span>⚡</span> 系统状态</div>
+                        <div class="value">正常运行</div>
+                        <div class="trend">可用性 99.9%</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        快捷入口
+                        <span style="font-size: 12px; font-weight: normal; color: var(--colorTextTertiary);">常用功能快速访问</span>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                            <div style="padding: 20px; background: var(--colorBgLayout); border-radius: 6px; cursor: pointer; transition: 0.2s;" onclick="location.href='chat.html'">
+                                <div style="font-size: 24px; margin-bottom: 8px;">💬</div>
+                                <div style="font-weight: 500; color: var(--colorText);">智能问答</div>
+                                <div style="font-size: 12px; color: var(--colorTextTertiary); margin-top: 4px;">咨询排程相关问题</div>
+                            </div>
+                            <div style="padding: 20px; background: var(--colorBgLayout); border-radius: 6px; cursor: pointer; transition: 0.2s;" onclick="location.href='reports.html'">
+                                <div style="font-size: 24px; margin-bottom: 8px;">📋</div>
+                                <div style="font-weight: 500; color: var(--colorText);">周报管理</div>
+                                <div style="font-size: 12px; color: var(--colorTextTertiary); margin-top: 4px;">查看/审核/发布周报</div>
+                            </div>
+                            <div style="padding: 20px; background: var(--colorBgLayout); border-radius: 6px; cursor: pointer; transition: 0.2s;" onclick="location.href='stats.html'">
+                                <div style="font-size: 24px; margin-bottom: 8px;">📈</div>
+                                <div style="font-weight: 500; color: var(--colorText);">数据统计</div>
+                                <div style="font-size: 12px; color: var(--colorTextTertiary); margin-top: 4px;">满意度与审核时效</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">系统架构说明 <span style="font-weight: normal; color: var(--colorTextTertiary); font-size: 12px;">微网Agent与算法Agent分层协作</span></div>
+                    <div class="card-body">
+                        <p style="margin-bottom: 12px;">本系统采用<strong>微网Agent与算法Agent分层协作架构</strong>：</p>
+                        <div style="display: flex; gap: 16px; margin-top: 16px;">
+                            <div style="flex: 1; padding: 16px; background: var(--colorPrimaryBg); border-radius: 6px; border-left: 3px solid var(--colorPrimary);">
+                                <div style="font-weight: 500; color: var(--colorText); margin-bottom: 4px;">微网Agent（产品层）</div>
+                                <div style="font-size: 12px; color: var(--colorTextSecondary);">对话交互、意图理解、知识库管理、问题路由</div>
+                            </div>
+                            <div style="flex: 1; padding: 16px; background: rgba(103, 194, 58, 0.1); border-radius: 6px; border-left: 3px solid var(--colorSuccess);">
+                                <div style="font-weight: 500; color: var(--colorText); margin-bottom: 4px;">算法Agent（能力层）</div>
+                                <div style="font-size: 12px; color: var(--colorTextSecondary);">实时预测排程、实施效果分析、数据计算</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">设计规范说明</div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: center;">
+                            <div><div style="width: 32px; height: 32px; background: #ff8916; border-radius: 4px; margin: 0 auto 8px;"></div><div style="font-size: 12px; color: var(--colorTextTertiary);">品牌色 #ff8916</div></div>
+                            <div><div style="width: 32px; height: 32px; background: #67c23a; border-radius: 4px; margin: 0 auto 8px;"></div><div style="font-size: 12px; color: var(--colorTextTertiary);">成功 #67c23a</div></div>
+                            <div><div style="width: 32px; height: 32px; background: #ea3d2f; border-radius: 4px; margin: 0 auto 8px;"></div><div style="font-size: 12px; color: var(--colorTextTertiary);">错误 #ea3d2f</div></div>
+                            <div><div style="width: 32px; height: 32px; background: #0081f0; border-radius: 4px; margin: 0 auto 8px;"></div><div style="font-size: 12px; color: var(--colorTextTertiary);">信息 #0081f0</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
