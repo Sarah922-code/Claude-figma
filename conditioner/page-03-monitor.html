@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>设备监测 - 智慧园区空调管理系统</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f5f7fa; color: #333; }
+
+/* Sidebar */
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: #001529; color: #fff; z-index: 100; }
+.sidebar-header { padding: 16px 20px; font-size: 18px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.sidebar-nav { padding: 12px 0; }
+.sidebar-nav a { display: block; padding: 12px 20px; color: rgba(255,255,255,0.65); text-decoration: none; font-size: 14px; transition: all 0.2s; }
+.sidebar-nav a:hover { color: #fff; background: rgba(255,255,255,0.05); }
+.sidebar-nav a.active { color: #fff; background: #ff8800; border-right: 3px solid #fff; }
+.sidebar-section { padding: 8px 20px; font-size: 12px; color: rgba(255,255,255,0.35); text-transform: uppercase; margin-top: 8px; }
+
+/* Header */
+.header { position: fixed; top: 0; left: 240px; right: 0; height: 56px; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 90; }
+.header-title { font-size: 16px; font-weight: 600; color: #333; }
+.header-user { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #666; }
+.header-avatar { width: 32px; height: 32px; border-radius: 50%; background: #ff8800; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; }
+
+/* Main */
+.main { margin-left: 240px; padding: 72px 24px 24px; min-height: 100vh; }
+
+/* Device selector */
+.device-selector { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.device-selector label { font-size: 14px; font-weight: 500; color: #666; }
+.device-selector select { padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; background: #fff; min-width: 320px; cursor: pointer; }
+.device-selector select:focus { outline: none; border-color: #ff8800; box-shadow: 0 0 0 2px rgba(255,136,0,0.2); }
+
+/* Breadcrumb */
+.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #999; margin-bottom: 16px; }
+.breadcrumb a { color: #666; text-decoration: none; }
+.breadcrumb a:hover { color: #ff8800; }
+.breadcrumb .current { color: #333; font-weight: 500; }
+
+/* Status badges */
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+.badge-green { background: #f6ffed; color: #52c41a; border: 1px solid #b7eb8f; }
+.badge-gray { background: #fafafa; color: #999; border: 1px solid #d9d9d9; }
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; }
+.badge-green .badge-dot { background: #52c41a; }
+.badge-gray .badge-dot { background: #999; }
+
+/* Stat cards */
+.stat-cards { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat-card { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.stat-card .label { font-size: 12px; color: #999; margin-bottom: 6px; }
+.stat-card .value { font-size: 22px; font-weight: 700; color: #333; }
+.stat-card .unit { font-size: 12px; color: #999; font-weight: 400; margin-left: 2px; }
+.stat-card.accent .value { color: #ff8800; }
+
+/* Three panel layout */
+.three-panel { display: grid; grid-template-columns: 280px 1fr 300px; gap: 16px; margin-bottom: 20px; }
+.panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); overflow: hidden; }
+.panel-header { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; font-weight: 600; color: #333; }
+.panel-body { padding: 16px; }
+
+/* Device params */
+.param-list { display: flex; flex-direction: column; gap: 10px; }
+.param-item { display: flex; justify-content: space-between; font-size: 13px; }
+.param-item .param-label { color: #999; }
+.param-item .param-value { color: #333; font-weight: 500; }
+
+/* AC visualization */
+.ac-visual { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; position: relative; }
+.ac-unit { width: 200px; height: 120px; border: 2px solid #d9d9d9; border-radius: 12px; position: relative; background: linear-gradient(135deg, #fafafa, #f0f0f0); display: flex; align-items: center; justify-content: center; }
+.ac-unit .ac-led { position: absolute; top: 12px; right: 16px; width: 10px; height: 10px; border-radius: 50%; }
+.ac-led.online { background: #52c41a; box-shadow: 0 0 8px #52c41a; }
+.ac-led.offline { background: #999; }
+.ac-unit .ac-label { font-size: 14px; font-weight: 600; color: #666; }
+.ac-unit .ac-icon { font-size: 40px; margin-bottom: 4px; }
+.ac-flow { display: flex; gap: 40px; margin-top: 20px; }
+.ac-flow-item { display: flex; flex-direction: column; align-items: center; font-size: 12px; color: #999; }
+.ac-flow-item .flow-icon { font-size: 24px; margin-bottom: 4px; }
+.ac-flow-item .flow-value { font-weight: 600; color: #333; }
+
+/* Indoor/outdoor data */
+.io-data { display: flex; flex-direction: column; gap: 12px; }
+.io-section { border: 1px solid #f0f0f0; border-radius: 6px; padding: 10px; }
+.io-section h4 { font-size: 12px; color: #999; margin-bottom: 8px; font-weight: 500; }
+.io-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
+.io-row .io-label { color: #666; }
+.io-row .io-value { color: #333; font-weight: 500; }
+
+/* Data table */
+.table-section { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); overflow: hidden; }
+.table-section .panel-header { display: flex; justify-content: space-between; align-items: center; }
+.table-section .panel-header button { padding: 6px 12px; background: #ff8800; color: #fff; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; }
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { background: #fafafa; padding: 10px 16px; text-align: left; font-size: 12px; color: #999; font-weight: 500; border-bottom: 1px solid #f0f0f0; }
+.data-table td { padding: 10px 16px; font-size: 13px; border-bottom: 1px solid #f0f0f0; }
+.data-table tr:hover td { background: #fafafa; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header">智慧园区空调管理</div>
+  <div class="sidebar-section">基础数据</div>
+  <div class="sidebar-nav">
+    <a href="page-01-model.html">型号维护</a>
+    <a href="page-02-device.html">设备创建</a>
+    <a href="page-03-monitor.html" class="active">设备监测</a>
+  </div>
+</div>
+
+<div class="header">
+  <div class="header-title">设备监测</div>
+  <div class="header-user">
+    <div class="header-avatar">管</div>
+    <span>管理员</span>
+  </div>
+</div>
+
+<div class="main">
+  <!-- Device selector -->
+  <div class="device-selector">
+    <label>选择设备：</label>
+    <select id="deviceSelect"></select>
+    <span id="deviceStatus"></span>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="#">首页</a>
+    <span>/</span>
+    <a href="#">设备监测</a>
+    <span>/</span>
+    <span class="current" id="breadcrumbDevice">AC-DEV-001</span>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="stat-cards" id="statCards">
+    <div class="stat-card accent">
+      <div class="label">系统功率</div>
+      <div class="value" id="val-power">--<span class="unit">kW</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="label">制冷温度</div>
+      <div class="value" id="val-cool-temp">--<span class="unit">°C</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="label">制热温度</div>
+      <div class="value" id="val-heat-temp">--<span class="unit">°C</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="label">运行频率</div>
+      <div class="value" id="val-freq">--<span class="unit">Hz</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="label">母线电压</div>
+      <div class="value" id="val-voltage">--<span class="unit">V</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="label">运行电流</div>
+      <div class="value" id="val-current">--<span class="unit">A</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="label">环境温度</div>
+      <div class="value" id="val-env-temp">--<span class="unit">°C</span></div>
+    </div>
+  </div>
+  <div class="stat-cards" style="grid-template-columns: repeat(1, 1fr); margin-top: -8px; margin-bottom: 20px;">
+    <div class="stat-card" style="max-width: 200px;">
+      <div class="label">累计电量</div>
+      <div class="value" id="val-energy">--<span class="unit">kWh</span></div>
+    </div>
+  </div>
+
+  <!-- Three panel layout -->
+  <div class="three-panel">
+    <!-- Left: Device parameters -->
+    <div class="panel">
+      <div class="panel-header">设备参数</div>
+      <div class="panel-body">
+        <div class="param-list" id="paramList"></div>
+      </div>
+    </div>
+
+    <!-- Center: AC visualization -->
+    <div class="panel">
+      <div class="panel-header">空调可视化</div>
+      <div class="panel-body">
+        <div class="ac-visual">
+          <div class="ac-unit">
+            <div class="ac-led" id="acLed"></div>
+            <div style="text-align:center;">
+              <div class="ac-icon">&#10052;</div>
+              <div class="ac-label" id="acUnitLabel">外机</div>
+            </div>
+          </div>
+          <div class="ac-flow">
+            <div class="ac-flow-item">
+              <div class="flow-icon">&#9632;</div>
+              <div>外机</div>
+              <div class="flow-value" id="outdoorCount">2</div>
+              <div style="font-size:11px;">台</div>
+            </div>
+            <div class="ac-flow-item" style="color:#ff8800;">&#8594;</div>
+            <div class="ac-flow-item">
+              <div class="flow-icon">&#9633;</div>
+              <div>内机</div>
+              <div class="flow-value" id="indoorCount">8</div>
+              <div style="font-size:11px;">台</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Indoor/outdoor data -->
+    <div class="panel">
+      <div class="panel-header">内外机数据</div>
+      <div class="panel-body">
+        <div class="io-data" id="ioData"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data history table -->
+  <div class="table-section">
+    <div class="panel-header">
+      <span>数据历史记录</span>
+      <button onclick="clearHistory()">清空记录</button>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>时间</th>
+          <th>系统功率(kW)</th>
+          <th>制冷温度(°C)</th>
+          <th>制热温度(°C)</th>
+          <th>运行频率(Hz)</th>
+          <th>母线电压(V)</th>
+          <th>运行电流(A)</th>
+          <th>环境温度(°C)</th>
+          <th>累计电量(kWh)</th>
+        </tr>
+      </thead>
+      <tbody id="historyBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// Device data
+var devices = [
+  {
+    id: 'AC-DEV-001',
+    model: '格力GMV-500WM/A',
+    project: '智慧园区一期项目',
+    location: 'A栋1层',
+    status: 'online',
+    outdoorUnits: 2,
+    indoorUnits: 8,
+    ratedPower: 50.0,
+    coolTemp: 7,
+    heatTemp: 45,
+    ratedFreq: 50,
+    busVoltage: 580,
+    ratedCurrent: 86.2,
+    energy: 12580.5
+  },
+  {
+    id: 'AC-DEV-002',
+    model: '美的MDV-280W/D2SN1-8R0',
+    project: '智慧园区二期项目',
+    location: 'B栋3层',
+    status: 'online',
+    outdoorUnits: 1,
+    indoorUnits: 6,
+    ratedPower: 28.0,
+    coolTemp: 7,
+    heatTemp: 45,
+    ratedFreq: 50,
+    busVoltage: 540,
+    ratedCurrent: 51.8,
+    energy: 8920.3
+  },
+  {
+    id: 'AC-DEV-003',
+    model: '海尔MRV-160',
+    project: '办公大楼改造项目',
+    location: 'C栋2层',
+    status: 'offline',
+    outdoorUnits: 1,
+    indoorUnits: 4,
+    ratedPower: 16.0,
+    coolTemp: 7,
+    heatTemp: 45,
+    ratedFreq: 50,
+    busVoltage: 520,
+    ratedCurrent: 30.6,
+    energy: 5640.1
+  }
+];
+
+var currentDevice = 0;
+var historyData = [];
+var currentValues = {};
+
+// Initialize device selector
+function initDeviceSelector() {
+  var sel = document.getElementById('deviceSelect');
+  for (var i = 0; i < devices.length; i++) {
+    var opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = devices[i].id + ' - ' + devices[i].model + ' (' + devices[i].location + ')';
+    sel.appendChild(opt);
+  }
+  sel.addEventListener('change', function() {
+    currentDevice = parseInt(this.value);
+    updateAll();
+  });
+}
+
+// Update status badge
+function updateStatus() {
+  var d = devices[currentDevice];
+  var el = document.getElementById('deviceStatus');
+  if (d.status === 'online') {
+    el.innerHTML = '<span class="badge badge-green"><span class="badge-dot"></span>在线</span>';
+  } else {
+    el.innerHTML = '<span class="badge badge-gray"><span class="badge-dot"></span>离线</span>';
+  }
+}
+
+// Update breadcrumb
+function updateBreadcrumb() {
+  var d = devices[currentDevice];
+  document.getElementById('breadcrumbDevice').textContent = d.id + ' - ' + d.model;
+}
+
+// Generate simulated values
+function generateValues() {
+  var d = devices[currentDevice];
+  var isOnline = d.status === 'online';
+
+  if (!isOnline) {
+    currentValues = {
+      power: 0,
+      coolTemp: 0,
+      heatTemp: 0,
+      freq: 0,
+      voltage: 0,
+      currentVal: 0,
+      envTemp: 26.5,
+      energy: d.energy
+    };
+    return;
+  }
+
+  // Initialize with reasonable values if first run
+  if (!currentValues.power) {
+    currentValues = {
+      power: d.ratedPower * 0.7 + Math.random() * d.ratedPower * 0.3,
+      coolTemp: d.coolTemp + (Math.random() - 0.5) * 2,
+      heatTemp: d.heatTemp + (Math.random() - 0.5) * 4,
+      freq: d.ratedFreq + (Math.random() - 0.5) * 4,
+      voltage: d.busVoltage + (Math.random() - 0.5) * 20,
+      currentVal: d.ratedCurrent * 0.6 + Math.random() * d.ratedCurrent * 0.4,
+      envTemp: 26 + Math.random() * 6,
+      energy: d.energy
+    };
+  }
+
+  // Apply small random variations
+  currentValues.power = Math.max(0, currentValues.power + (Math.random() - 0.5) * 3);
+  currentValues.coolTemp += (Math.random() - 0.5) * 0.4;
+  currentValues.heatTemp += (Math.random() - 0.5) * 0.8;
+  currentValues.freq = Math.max(30, Math.min(70, currentValues.freq + (Math.random() - 0.5) * 2));
+  currentValues.voltage += (Math.random() - 0.5) * 5;
+  currentValues.currentVal = Math.max(0, currentValues.currentVal + (Math.random() - 0.5) * 2);
+  currentValues.envTemp += (Math.random() - 0.5) * 0.2;
+  currentValues.energy += currentValues.power / 1200; // per 3s interval
+}
+
+// Update stat cards
+function updateStatCards() {
+  var v = currentValues;
+  document.getElementById('val-power').innerHTML = v.power.toFixed(1) + '<span class="unit">kW</span>';
+  document.getElementById('val-cool-temp').innerHTML = v.coolTemp.toFixed(1) + '<span class="unit">°C</span>';
+  document.getElementById('val-heat-temp').innerHTML = v.heatTemp.toFixed(1) + '<span class="unit">°C</span>';
+  document.getElementById('val-freq').innerHTML = v.freq.toFixed(1) + '<span class="unit">Hz</span>';
+  document.getElementById('val-voltage').innerHTML = v.voltage.toFixed(0) + '<span class="unit">V</span>';
+  document.getElementById('val-current').innerHTML = v.currentVal.toFixed(1) + '<span class="unit">A</span>';
+  document.getElementById('val-env-temp').innerHTML = v.envTemp.toFixed(1) + '<span class="unit">°C</span>';
+  document.getElementById('val-energy').innerHTML = v.energy.toFixed(1) + '<span class="unit">kWh</span>';
+}
+
+// Update device parameters panel
+function updateParams() {
+  var d = devices[currentDevice];
+  var params = [
+    { label: '设备编号', value: d.id },
+    { label: '设备型号', value: d.model },
+    { label: '所属项目', value: d.project },
+    { label: '安装位置', value: d.location },
+    { label: '额定功率', value: d.ratedPower + ' kW' },
+    { label: '制冷设定温度', value: d.coolTemp + ' °C' },
+    { label: '制热设定温度', value: d.heatTemp + ' °C' },
+    { label: '额定频率', value: d.ratedFreq + ' Hz' },
+    { label: '母线电压', value: d.busVoltage + ' V' },
+    { label: '额定电流', value: d.ratedCurrent + ' A' },
+    { label: '外机数量', value: d.outdoorUnits + ' 台' },
+    { label: '内机数量', value: d.indoorUnits + ' 台' }
+  ];
+  var html = '';
+  for (var i = 0; i < params.length; i++) {
+    html += '<div class="param-item"><span class="param-label">' + params[i].label + '</span><span class="param-value">' + params[i].value + '</span></div>';
+  }
+  document.getElementById('paramList').innerHTML = html;
+}
+
+// Update AC visualization
+function updateVisualization() {
+  var d = devices[currentDevice];
+  var led = document.getElementById('acLed');
+  led.className = 'ac-led ' + d.status;
+  document.getElementById('acUnitLabel').textContent = d.model.split('-')[0];
+  document.getElementById('outdoorCount').textContent = d.outdoorUnits;
+  document.getElementById('indoorCount').textContent = d.indoorUnits;
+}
+
+// Update indoor/outdoor data
+function updateIOData() {
+  var d = devices[currentDevice];
+  var isOnline = d.status === 'online';
+  var html = '';
+
+  // Outdoor unit data
+  html += '<div class="io-section"><h4>外机数据 (' + d.outdoorUnits + '台)</h4>';
+  html += '<div class="io-row"><span class="io-label">压缩机频率</span><span class="io-value">' + (isOnline ? currentValues.freq.toFixed(1) + ' Hz' : '--') + '</span></div>';
+  html += '<div class="io-row"><span class="io-label">排气温度</span><span class="io-value">' + (isOnline ? (65 + Math.random() * 15).toFixed(1) + ' °C' : '--') + '</span></div>';
+  html += '<div class="io-row"><span class="io-label">冷凝温度</span><span class="io-value">' + (isOnline ? (40 + Math.random() * 10).toFixed(1) + ' °C' : '--') + '</span></div>';
+  html += '<div class="io-row"><span class="io-label">运行电流</span><span class="io-value">' + (isOnline ? currentValues.currentVal.toFixed(1) + ' A' : '--') + '</span></div>';
+  html += '</div>';
+
+  // Indoor unit data
+  html += '<div class="io-section"><h4>内机数据 (' + d.indoorUnits + '台)</h4>';
+  html += '<div class="io-row"><span class="io-label">回风温度</span><span class="io-value">' + (isOnline ? (24 + Math.random() * 4).toFixed(1) + ' °C' : '--') + '</span></div>';
+  html += '<div class="io-row"><span class="io-label">出风温度</span><span class="io-value">' + (isOnline ? (12 + Math.random() * 5).toFixed(1) + ' °C' : '--') + '</span></div>';
+  html += '<div class="io-row"><span class="io-label">风机转速</span><span class="io-value">' + (isOnline ? Math.floor(800 + Math.random() * 400) + ' rpm' : '--') + '</span></div>';
+  html += '<div class="io-row"><span class="io-label">运行模式</span><span class="io-value">' + (isOnline ? '制冷' : '--') + '</span></div>';
+  html += '</div>';
+
+  document.getElementById('ioData').innerHTML = html;
+}
+
+// Add history record
+function addHistoryRecord() {
+  var now = new Date();
+  var timeStr = now.getFullYear() + '-' +
+    String(now.getMonth() + 1).padStart(2, '0') + '-' +
+    String(now.getDate()).padStart(2, '0') + ' ' +
+    String(now.getHours()).padStart(2, '0') + ':' +
+    String(now.getMinutes()).padStart(2, '0') + ':' +
+    String(now.getSeconds()).padStart(2, '0');
+
+  var v = currentValues;
+  historyData.unshift({
+    time: timeStr,
+    power: v.power.toFixed(1),
+    coolTemp: v.coolTemp.toFixed(1),
+    heatTemp: v.heatTemp.toFixed(1),
+    freq: v.freq.toFixed(1),
+    voltage: v.voltage.toFixed(0),
+    currentVal: v.currentVal.toFixed(1),
+    envTemp: v.envTemp.toFixed(1),
+    energy: v.energy.toFixed(1)
+  });
+
+  // Keep only last 20 records
+  if (historyData.length > 20) {
+    historyData = historyData.slice(0, 20);
+  }
+
+  renderHistory();
+}
+
+// Render history table
+function renderHistory() {
+  var html = '';
+  for (var i = 0; i < historyData.length; i++) {
+    var r = historyData[i];
+    html += '<tr>';
+    html += '<td>' + r.time + '</td>';
+    html += '<td>' + r.power + '</td>';
+    html += '<td>' + r.coolTemp + '</td>';
+    html += '<td>' + r.heatTemp + '</td>';
+    html += '<td>' + r.freq + '</td>';
+    html += '<td>' + r.voltage + '</td>';
+    html += '<td>' + r.currentVal + '</td>';
+    html += '<td>' + r.envTemp + '</td>';
+    html += '<td>' + r.energy + '</td>';
+    html += '</tr>';
+  }
+  document.getElementById('historyBody').innerHTML = html;
+}
+
+// Clear history
+function clearHistory() {
+  historyData = [];
+  currentValues = {};
+  renderHistory();
+}
+
+// Update all UI
+function updateAll() {
+  updateStatus();
+  updateBreadcrumb();
+  updateParams();
+  updateVisualization();
+  generateValues();
+  updateStatCards();
+  updateIOData();
+  addHistoryRecord();
+}
+
+// Initialize
+initDeviceSelector();
+updateAll();
+
+// Real-time update every 3 seconds
+setInterval(function() {
+  generateValues();
+  updateStatCards();
+  updateIOData();
+  addHistoryRecord();
+}, 3000);
+</script>
+</body>
+</html>

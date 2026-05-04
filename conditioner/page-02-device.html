@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星能SaaS | 设备创建</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; }
+body { font-family: -apple-system, "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif; background:#f5f7fa; color:#333; font-size:14px; }
+.app-container { display:flex; min-height:100vh; }
+.header { position:fixed; top:0; left:240px; right:0; height:56px; background:#fff; border-bottom:1px solid #e8e8e8; z-index:50; display:flex; align-items:center; padding:0 24px; box-shadow:0 1px 4px rgba(0,0,0,.04); }
+.header-brand { font-size:16px; font-weight:600; color:#333; }
+.header-brand span { color:#ff8800; }
+.header-right { margin-left:auto; display:flex; align-items:center; gap:16px; }
+.header-user { display:flex; align-items:center; gap:8px; font-size:13px; color:#666; }
+.header-avatar { width:32px; height:32px; border-radius:50%; background:#ff8800; color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; }
+.sidebar { position:fixed; left:0; top:0; bottom:0; width:240px; background:#001529; display:flex; flex-direction:column; z-index:60; }
+.sidebar-logo { height:56px; display:flex; align-items:center; padding:0 20px; gap:10px; border-bottom:1px solid rgba(255,255,255,.08); }
+.sidebar-logo-icon { width:32px; height:32px; background:#ff8800; border-radius:6px; display:flex; align-items:center; justify-content:center; }
+.sidebar-logo-text { color:#fff; font-size:16px; font-weight:700; }
+.sidebar-logo-sub { color:rgba(255,255,255,.45); font-size:11px; }
+.sidebar-nav { flex:1; padding:12px 0; }
+.sidebar-section-title { color:rgba(255,255,255,.35); font-size:11px; padding:16px 20px 8px; text-transform:uppercase; letter-spacing:1px; }
+.sidebar-nav a { display:flex; align-items:center; padding:11px 20px; color:rgba(255,255,255,.65); text-decoration:none; font-size:14px; border-left:3px solid transparent; }
+.sidebar-nav a:hover { background:rgba(255,255,255,.05); color:rgba(255,255,255,.9); }
+.sidebar-nav a.active { background:linear-gradient(90deg, rgba(255,136,0,.15), transparent); color:#ff8800; border-left-color:#ff8800; font-weight:600; }
+.sidebar-nav a .nav-icon { margin-right:10px; width:20px; text-align:center; font-size:16px; }
+.sidebar-footer { padding:12px 20px; border-top:1px solid rgba(255,255,255,.08); color:rgba(255,255,255,.3); font-size:11px; }
+.main-content { margin-left:240px; margin-top:56px; flex:1; min-height:calc(100vh - 56px); }
+.tab-bar { background:#fff; padding:12px 24px; border-bottom:1px solid #e8e8e8; }
+.tab-bar .breadcrumb { font-size:13px; color:#999; }
+.tab-bar .breadcrumb span { color:#333; font-weight:500; }
+.page-header { padding:20px 24px 0; }
+.page-header h2 { font-size:20px; font-weight:600; color:#1a1a1a; margin-bottom:4px; }
+.page-header p { font-size:13px; color:#888; }
+.content-area { padding:16px 24px 24px; }
+.card { background:#fff; border-radius:8px; padding:20px; margin-bottom:16px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+.toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+.toolbar .search input { padding:8px 12px; border:1px solid #ddd; border-radius:6px; width:280px; font-size:13px; }
+.toolbar .search input:focus { outline:none; border-color:#ff8800; }
+.btn { padding:8px 16px; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:500; display:inline-flex; align-items:center; gap:6px; }
+.btn-primary { background:#ff8800; color:#fff; }
+.btn-primary:hover { background:#e67a00; }
+.btn-success { background:#52c41a; color:#fff; }
+.btn-success:hover { background:#45a818; }
+.btn-outline { background:#fff; border:1px solid #d9d9d9; color:#555; }
+.btn-outline:hover { border-color:#ff8800; color:#ff8800; }
+.btn-sm { padding:5px 10px; font-size:12px; }
+.btn-link { background:none; border:none; color:#1890ff; cursor:pointer; font-size:13px; padding:4px 8px; }
+.btn-link:hover { color:#ff8800; }
+.btn-link.danger { color:#ff4d4f; }
+.data-table { width:100%; border-collapse:collapse; font-size:13px; }
+.data-table th { background:#fafafa; padding:12px; text-align:left; font-weight:600; color:#555; border-bottom:2px solid #e8e8e8; white-space:nowrap; }
+.data-table td { padding:12px; border-bottom:1px solid #f0f0f0; vertical-align:middle; }
+.data-table tbody tr:hover td { background:#fffdf9; }
+.badge { display:inline-block; padding:2px 10px; border-radius:10px; font-size:11px; font-weight:500; }
+.badge-green { background:#f6ffed; color:#52c41a; border:1px solid #b7eb8f; }
+.badge-red { background:#fff2f0; color:#ff4d4f; border:1px solid #ffa39e; }
+.badge-gray { background:#fafafa; color:#999; border:1px solid #d9d9d9; }
+.stat-cards { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:16px; }
+.stat-card { background:#fff; border-radius:8px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,.06); display:flex; align-items:center; gap:16px; }
+.stat-card .stat-icon { width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.stat-card .stat-icon.orange { background:rgba(255,136,0,.1); color:#ff8800; }
+.stat-card .stat-icon.green { background:rgba(82,196,26,.1); color:#52c41a; }
+.stat-card .stat-icon.blue { background:rgba(24,144,255,.1); color:#1890ff; }
+.stat-card .stat-icon.red { background:rgba(255,77,79,.1); color:#ff4d4f; }
+.stat-card .stat-info .stat-value { font-size:24px; font-weight:700; color:#1a1a1a; }
+.stat-card .stat-info .stat-label { font-size:12px; color:#999; margin-top:2px; }
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center; }
+.modal-overlay.show { display:flex; }
+.modal { background:#fff; border-radius:12px; width:640px; max-height:85vh; overflow-y:auto; box-shadow:0 12px 40px rgba(0,0,0,.15); }
+.modal-header { padding:16px 24px; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center; }
+.modal-header h3 { font-size:16px; font-weight:600; }
+.modal-close { background:none; border:none; font-size:22px; cursor:pointer; color:#999; width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:6px; }
+.modal-close:hover { background:#f5f5f5; color:#333; }
+.modal-body { padding:24px; }
+.modal-footer { padding:12px 24px; border-top:1px solid #f0f0f0; text-align:right; display:flex; justify-content:flex-end; gap:8px; }
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; margin-bottom:6px; font-size:13px; font-weight:500; color:#333; }
+.form-group label .req { color:#ff4d4f; margin-right:2px; }
+.form-group input, .form-group select { width:100%; padding:8px 12px; border:1px solid #d9d9d9; border-radius:6px; font-size:13px; }
+.form-group input:focus, .form-group select:focus { outline:none; border-color:#ff8800; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.form-hint { font-size:12px; color:#999; margin-top:4px; }
+.wizard-steps { display:flex; margin-bottom:24px; position:relative; }
+.wizard-steps::before { content:''; position:absolute; top:15px; left:10%; right:10%; height:2px; background:#e8e8e8; }
+.wizard-steps .step { flex:1; text-align:center; padding:0 8px; position:relative; z-index:1; }
+.wizard-steps .step .step-num { width:30px; height:30px; border-radius:50%; background:#e8e8e8; color:#999; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; margin-bottom:6px; transition:all .3s; }
+.wizard-steps .step.active .step-num { background:#ff8800; color:#fff; }
+.wizard-steps .step.done .step-num { background:#52c41a; color:#fff; }
+.wizard-steps .step .step-label { font-size:12px; color:#999; }
+.wizard-steps .step.active .step-label { color:#ff8800; font-weight:600; }
+.wizard-steps .step.done .step-label { color:#52c41a; }
+.wizard-step-content { display:none; }
+.wizard-step-content.active { display:block; }
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-thumb { background:#d9d9d9; border-radius:3px; }
+</style>
+</head>
+<body>
+<div class="app-container">
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">&#9889;</div>
+    <div><div class="sidebar-logo-text">星能能源</div><div class="sidebar-logo-sub">综合能源运营管理平台</div></div>
+  </div>
+  <div class="sidebar-section-title">空调多联机管理</div>
+  <nav class="sidebar-nav">
+    <a href="page-01-model.html"><span class="nav-icon">&#9881;</span>型号维护</a>
+    <a href="#" class="active"><span class="nav-icon">&#128736;</span>设备创建</a>
+    <a href="page-03-monitor.html"><span class="nav-icon">&#128202;</span>设备监测</a>
+  </nav>
+  <div class="sidebar-footer">星能SaaS v2.0 &copy; 2026</div>
+</div>
+<div class="header">
+  <div class="header-brand"><span>星能SaaS</span> | 空调多联机管理</div>
+  <div class="header-right"><div class="header-user"><div class="header-avatar">管</div><span>管理员</span></div></div>
+</div>
+<div class="main-content">
+  <div class="tab-bar"><div class="breadcrumb">首页 / 空调多联机 / <span>设备创建</span></div></div>
+  <div class="page-header"><h2>设备创建</h2><p>基于项目创建空调多联机设备，关联型号与安装位置</p></div>
+  <div class="content-area">
+    <div class="stat-cards">
+      <div class="stat-card"><div class="stat-icon orange">&#128736;</div><div class="stat-info"><div class="stat-value" id="sTotal">3</div><div class="stat-label">设备总数</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">&#9889;</div><div class="stat-info"><div class="stat-value" id="sOnline">2</div><div class="stat-label">在线设备</div></div></div>
+      <div class="stat-card"><div class="stat-icon red">&#128268;</div><div class="stat-info"><div class="stat-value" id="sOffline">1</div><div class="stat-label">离线设备</div></div></div>
+      <div class="stat-card"><div class="stat-icon blue">&#127961;</div><div class="stat-info"><div class="stat-value" id="sProjects">2</div><div class="stat-label">关联项目</div></div></div>
+    </div>
+    <div class="card">
+      <div class="toolbar">
+        <div class="search"><input type="text" id="deviceSearch" placeholder="搜索设备编码、项目、安装位置..." oninput="renderTable(this.value)"></div>
+        <button class="btn btn-primary" onclick="openWizard()">&#43; 创建设备</button>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>设备编码</th><th>关联项目</th><th>绑定型号</th><th>安装位置</th><th>外机数</th><th>内机数</th><th>状态</th><th>创建日期</th><th>操作</th></tr></thead>
+        <tbody id="deviceTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Wizard Modal -->
+<div class="modal-overlay" id="wizardModal">
+  <div class="modal" style="width:720px;">
+    <div class="modal-header"><h3>创建设备向导</h3><button class="modal-close" onclick="closeWizard()">&times;</button></div>
+    <div class="modal-body">
+      <div class="wizard-steps">
+        <div class="step active" id="ws1"><div class="step-num">1</div><div class="step-label">选择项目</div></div>
+        <div class="step" id="ws2"><div class="step-num">2</div><div class="step-label">选择型号</div></div>
+        <div class="step" id="ws3"><div class="step-num">3</div><div class="step-label">配置设备</div></div>
+        <div class="step" id="ws4"><div class="step-num">4</div><div class="step-label">确认信息</div></div>
+      </div>
+
+      <!-- Step 1: Select Project -->
+      <div class="wizard-step-content active" id="wz1">
+        <div class="form-group"><label><span class="req">*</span> 选择项目</label><select id="wProject"><option value="">请选择项目...</option><option value="智慧园区一期项目">智慧园区一期项目</option><option value="智慧园区二期项目">智慧园区二期项目</option><option value="办公大楼改造项目">办公大楼改造项目</option><option value="新建医院项目">新建医院项目</option></select></div>
+        <div class="form-group"><label>项目描述</label><div id="projectDesc" style="font-size:13px;color:#888;padding:8px 12px;background:#fafafa;border-radius:6px;">请先选择项目查看描述</div></div>
+      </div>
+
+      <!-- Step 2: Select Model -->
+      <div class="wizard-step-content" id="wz2">
+        <div class="form-group"><label><span class="req">*</span> 选择空调型号</label><select id="wModel"><option value="">请选择型号...</option></select></div>
+        <div id="modelInfo" style="background:#fafafa;border-radius:6px;padding:12px;font-size:13px;color:#666;">选择型号后显示详细信息</div>
+      </div>
+
+      <!-- Step 3: Configure Device -->
+      <div class="wizard-step-content" id="wz3">
+        <div class="form-row">
+          <div class="form-group"><label><span class="req">*</span> 设备编码</label><input type="text" id="wCode" placeholder="自动生成" readonly></div>
+          <div class="form-group"><label><span class="req">*</span> 安装位置</label><input type="text" id="wLocation" placeholder="如 A栋1层"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>室外机数量</label><input type="number" id="wOQty" min="1" value="1"></div>
+          <div class="form-group"><label>室内机数量</label><input type="number" id="wIQty" min="1" value="1"></div>
+        </div>
+        <div class="form-group"><label>备注</label><input type="text" id="wRemark" placeholder="可选"></div>
+      </div>
+
+      <!-- Step 4: Confirm -->
+      <div class="wizard-step-content" id="wz4">
+        <div id="confirmInfo" style="background:#fafafa;border-radius:6px;padding:16px;"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="wPrev" onclick="wzPrev()" style="display:none;">上一步</button>
+      <button class="btn btn-primary" id="wNext" onclick="wzNext()">下一步</button>
+    </div>
+  </div>
+</div>
+
+<!-- View Device Modal -->
+<div class="modal-overlay" id="viewModal">
+  <div class="modal" style="width:640px;">
+    <div class="modal-header"><h3>设备详情</h3><button class="modal-close" onclick="document.getElementById('viewModal').classList.remove('show')">&times;</button></div>
+    <div class="modal-body"><div id="viewContent"></div></div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="document.getElementById('viewModal').classList.remove('show')">关闭</button></div>
+  </div>
+</div>
+
+<script>
+var models = [
+  {id:1,name:'格力GMV-500WM/A',type:'多联机',power:50,oQty:2,oPower:50,iQty:8,iPower:32,bus:'三相四线',status:'启用'},
+  {id:2,name:'美的MDV-280W/D2SN1-8R0',type:'多联机',power:28,oQty:1,oPower:28,iQty:6,iPower:22,bus:'三相三线',status:'启用'},
+  {id:3,name:'海尔MRV-160',type:'风冷热泵',power:16,oQty:1,oPower:16,iQty:4,iPower:14,bus:'单相',status:'启用'}
+];
+var projects = {
+  '智慧园区一期项目':'园区A栋、B栋的综合能源管理项目，包含空调、照明、配电等子系统。',
+  '智慧园区二期项目':'园区C栋、D栋扩建项目，新增储能及充电桩系统。',
+  '办公大楼改造项目':'原有办公大楼节能改造项目，替换老旧空调系统。',
+  '新建医院项目':'新建三甲医院暖通空调系统配套工程。'
+};
+var devices = [
+  {id:1,code:'AC-DEV-001',project:'智慧园区一期项目',modelId:1,location:'A栋1层',outdoorQty:2,indoorQty:8,status:'在线',created:'2026-04-15'},
+  {id:2,code:'AC-DEV-002',project:'智慧园区二期项目',modelId:2,location:'B栋3层',outdoorQty:1,indoorQty:6,status:'在线',created:'2026-04-20'},
+  {id:3,code:'AC-DEV-003',project:'办公大楼改造项目',modelId:3,location:'C栋2层',outdoorQty:1,indoorQty:4,status:'离线',created:'2026-04-25'}
+];
+var wzStep = 1;
+
+function renderTable(f) {
+  f = f || '';
+  var t = document.getElementById('deviceTable');
+  var list = devices.filter(function(d) { return d.code.indexOf(f)>=0 || d.project.indexOf(f)>=0 || d.location.indexOf(f)>=0; });
+  var h = '';
+  for (var i=0;i<list.length;i++) {
+    var d=list[i], m=models.find(function(x){return x.id===d.modelId;});
+    var sc = d.status==='在线'?'badge-green':'badge-gray';
+    h += '<tr><td><strong>'+d.code+'</strong></td><td><span class="tag tag-blue">'+d.project+'</span></td><td>'+(m?m.name:'-')+'</td><td>'+d.location+'</td><td>'+d.outdoorQty+'</td><td>'+d.indoorQty+'</td><td><span class="badge '+sc+'">'+d.status+'</span></td><td>'+d.created+'</td><td><button class="btn-link" onclick="viewD('+d.id+')">查看</button> <button class="btn-link danger" onclick="delD('+d.id+')">删除</button></td></tr>';
+  }
+  if (!list.length) h = '<tr><td colspan="9" style="text-align:center;color:#999;padding:40px 0;">暂无数据</td></tr>';
+  t.innerHTML = h;
+  document.getElementById('sTotal').textContent = devices.length;
+  document.getElementById('sOnline').textContent = devices.filter(function(d){return d.status==='在线';}).length;
+  document.getElementById('sOffline').textContent = devices.filter(function(d){return d.status==='离线';}).length;
+  var pSet = {}; for(var j=0;j<devices.length;j++) pSet[devices[j].project]=true;
+  document.getElementById('sProjects').textContent = Object.keys(pSet).length;
+}
+
+function openWizard() {
+  wzStep = 1;
+  document.getElementById('wProject').value = '';
+  document.getElementById('projectDesc').textContent = '请先选择项目查看描述';
+  document.getElementById('wModel').value = '';
+  document.getElementById('modelInfo').textContent = '选择型号后显示详细信息';
+  document.getElementById('wLocation').value = '';
+  document.getElementById('wRemark').value = '';
+  genCode();
+  // populate model select
+  var sel = document.getElementById('wModel');
+  sel.innerHTML = '<option value="">请选择型号...</option>';
+  for(var i=0;i<models.length;i++) sel.innerHTML += '<option value="'+models[i].id+'">'+models[i].name+' ('+models[i].type+')</option>';
+  showWzStep(1);
+  document.getElementById('wizardModal').classList.add('show');
+}
+function closeWizard() { document.getElementById('wizardModal').classList.remove('show'); }
+
+function genCode() {
+  var n = devices.length ? Math.max.apply(null, devices.map(function(d){return parseInt(d.code.split('-')[2]||'0');})) + 1 : 1;
+  document.getElementById('wCode').value = 'AC-DEV-' + ('00' + n).slice(-3);
+}
+
+document.getElementById('wProject').addEventListener('change', function() {
+  var v = this.value;
+  document.getElementById('projectDesc').textContent = v ? projects[v] || '暂无描述' : '请先选择项目查看描述';
+});
+
+document.getElementById('wModel').addEventListener('change', function() {
+  var v = parseInt(this.value);
+  var m = models.find(function(x){return x.id===v;});
+  if(m) {
+    document.getElementById('modelInfo').innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><div><strong>型号:</strong> '+m.name+'</div><div><strong>类型:</strong> '+m.type+'</div><div><strong>额定功率:</strong> '+m.power+' kW</div><div><strong>母线类型:</strong> '+m.bus+'</div><div><strong>外机配置:</strong> '+m.oQty+'台 / '+m.oPower+' kW</div><div><strong>内机配置:</strong> '+m.iQty+'台 / '+m.iPower+' kW</div></div>';
+    document.getElementById('wOQty').value = m.oQty;
+    document.getElementById('wIQty').value = m.iQty;
+  } else {
+    document.getElementById('modelInfo').textContent = '选择型号后显示详细信息';
+  }
+});
+
+function showWzStep(n) {
+  for(var i=1;i<=4;i++) {
+    document.getElementById('wz'+i).className = 'wizard-step-content' + (i===n?' active':'');
+    var s = document.getElementById('ws'+i);
+    s.className = 'step' + (i===n?' active':'') + (i<n?' done':'');
+  }
+  document.getElementById('wPrev').style.display = n>1?'inline-flex':'none';
+  var nb = document.getElementById('wNext');
+  if(n===4) { nb.textContent = '确认创建'; nb.className = 'btn btn-success'; }
+  else if(n===3) { nb.textContent = '下一步'; nb.className = 'btn btn-primary'; }
+  else { nb.textContent = '下一步'; nb.className = 'btn btn-primary'; }
+  if(n===3) buildConfirm();
+  wzStep = n;
+}
+
+function wzPrev() { if(wzStep>1) showWzStep(wzStep-1); }
+function wzNext() {
+  if(wzStep===1) {
+    if(!document.getElementById('wProject').value) { alert('请选择项目'); return; }
+    showWzStep(2);
+  } else if(wzStep===2) {
+    if(!document.getElementById('wModel').value) { alert('请选择型号'); return; }
+    genCode();
+    showWzStep(3);
+  } else if(wzStep===3) {
+    if(!document.getElementById('wLocation').value.trim()) { alert('请填写安装位置'); return; }
+    showWzStep(4);
+  } else if(wzStep===4) {
+    saveDevice();
+  }
+}
+
+function buildConfirm() {
+  var m = models.find(function(x){return x.id===parseInt(document.getElementById('wModel').value);});
+  var info = document.getElementById('confirmInfo');
+  info.innerHTML = '<div style="font-size:15px;font-weight:600;margin-bottom:16px;color:#1a1a1a;">&#10004; 请确认以下设备信息</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px;">' +
+    '<div><span style="color:#888;">关联项目</span><div style="font-weight:500;">'+document.getElementById('wProject').value+'</div></div>' +
+    '<div><span style="color:#888;">设备编码</span><div style="font-weight:500;">'+document.getElementById('wCode').value+'</div></div>' +
+    '<div><span style="color:#888;">绑定型号</span><div style="font-weight:500;">'+(m?m.name:'-')+'</div></div>' +
+    '<div><span style="color:#888;">安装位置</span><div style="font-weight:500;">'+document.getElementById('wLocation').value+'</div></div>' +
+    '<div><span style="color:#888;">外机数量</span><div style="font-weight:500;">'+document.getElementById('wOQty').value+'</div></div>' +
+    '<div><span style="color:#888;">内机数量</span><div style="font-weight:500;">'+document.getElementById('wIQty').value+'</div></div>' +
+    '</div>';
+}
+
+function saveDevice() {
+  var mid = parseInt(document.getElementById('wModel').value);
+  var m = models.find(function(x){return x.id===mid;});
+  var d = {
+    id: devices.length ? Math.max.apply(null, devices.map(function(x){return x.id;})) + 1 : 1,
+    code: document.getElementById('wCode').value,
+    project: document.getElementById('wProject').value,
+    modelId: mid,
+    location: document.getElementById('wLocation').value,
+    outdoorQty: parseInt(document.getElementById('wOQty').value) || 1,
+    indoorQty: parseInt(document.getElementById('wIQty').value) || 1,
+    status: '在线',
+    created: new Date().toISOString().slice(0,10)
+  };
+  devices.push(d);
+  closeWizard();
+  renderTable(document.getElementById('deviceSearch').value);
+}
+
+function delD(id) {
+  if(!confirm('确定删除此设备？')) return;
+  devices = devices.filter(function(x){return x.id!==id;});
+  renderTable(document.getElementById('deviceSearch').value);
+}
+
+function viewD(id) {
+  var d = devices.find(function(x){return x.id===id;});
+  var m = models.find(function(x){return x.id===d.modelId;});
+  var c = document.getElementById('viewContent');
+  c.innerHTML = '<div class="form-row"><div class="form-group"><label>设备编码</label><div style="font-weight:600;">'+d.code+'</div></div><div class="form-group"><label>关联项目</label><div><span class="tag tag-blue">'+d.project+'</span></div></div></div>' +
+    '<div class="form-row"><div class="form-group"><label>绑定型号</label><div>'+m.name+' <span class="tag tag-orange">'+m.type+'</span></div></div><div class="form-group"><label>安装位置</label><div>'+d.location+'</div></div></div>' +
+    '<div class="form-row"><div class="form-group"><label>外机数量</label><div>'+d.outdoorQty+' 台</div></div><div class="form-group"><label>内机数量</label><div>'+d.indoorQty+' 台</div></div></div>' +
+    '<div class="form-row"><div class="form-group"><label>设备状态</label><div><span class="badge '+(d.status==='在线'?'badge-green':'badge-gray')+'">'+d.status+'</span></div></div><div class="form-group"><label>创建日期</label><div>'+d.created+'</div></div></div>';
+  document.getElementById('viewModal').classList.add('show');
+}
+
+renderTable('');
+</script>
+</body>
+</html>
