@@ -9,264 +9,308 @@
 html, body { height:100%; }
 body { font-family: -apple-system, "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif; background:#f5f7fa; color:#333; font-size:14px; }
 .app-container { display:flex; min-height:100vh; }
-.header { position:fixed; top:0; left:240px; right:0; height:56px; background:#fff; border-bottom:1px solid #e8e8e8; z-index:50; display:flex; align-items:center; padding:0 24px; box-shadow:0 1px 4px rgba(0,0,0,.04); }
+.header { position:fixed; top:0; left:240px; right:0; height:56px; background:#fff; border-bottom:1px solid #e8e8e8; z-index:50; display:flex; align-items:center; padding:0 20px; justify-content:space-between; }
 .header-brand { font-size:16px; font-weight:600; color:#333; }
 .header-brand span { color:#ff8800; }
 .header-right { margin-left:auto; display:flex; align-items:center; gap:16px; }
 .header-user { display:flex; align-items:center; gap:8px; font-size:13px; color:#666; }
-.header-avatar { width:32px; height:32px; border-radius:50%; background:#ff8800; color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; }
+.header-avatar { width:32px; height:32px; border-radius:50%; background:#ff8800; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:600; }
 .sidebar { position:fixed; left:0; top:0; bottom:0; width:240px; background:#001529; display:flex; flex-direction:column; z-index:60; }
 .sidebar-logo { height:56px; display:flex; align-items:center; padding:0 20px; gap:10px; border-bottom:1px solid rgba(255,255,255,.08); }
-.sidebar-logo-icon { width:32px; height:32px; background:#ff8800; border-radius:6px; display:flex; align-items:center; justify-content:center; }
-.sidebar-logo-text { color:#fff; font-size:16px; font-weight:700; }
-.sidebar-logo-sub { color:rgba(255,255,255,.45); font-size:11px; }
-.sidebar-nav { flex:1; padding:12px 0; }
-.sidebar-section-title { color:rgba(255,255,255,.35); font-size:11px; padding:16px 20px 8px; text-transform:uppercase; letter-spacing:1px; }
-.sidebar-nav a { display:flex; align-items:center; padding:11px 20px; color:rgba(255,255,255,.65); text-decoration:none; font-size:14px; border-left:3px solid transparent; }
-.sidebar-nav a:hover { background:rgba(255,255,255,.05); color:rgba(255,255,255,.9); }
-.sidebar-nav a.active { background:linear-gradient(90deg, rgba(255,136,0,.15), transparent); color:#ff8800; border-left-color:#ff8800; font-weight:600; }
-.sidebar-nav a .nav-icon { margin-right:10px; width:20px; text-align:center; font-size:16px; }
-.sidebar-footer { padding:12px 20px; border-top:1px solid rgba(255,255,255,.08); color:rgba(255,255,255,.3); font-size:11px; }
-.main-content { margin-left:240px; margin-top:56px; flex:1; min-height:calc(100vh - 56px); }
-.tab-bar { background:#fff; padding:12px 24px; border-bottom:1px solid #e8e8e8; }
-.tab-bar .breadcrumb { font-size:13px; color:#999; }
-.tab-bar .breadcrumb span { color:#333; font-weight:500; }
-.page-header { padding:20px 24px 0; }
-.page-header h2 { font-size:20px; font-weight:600; color:#1a1a1a; margin-bottom:4px; }
-.page-header p { font-size:13px; color:#888; }
-.content-area { padding:16px 24px 24px; }
-.card { background:#fff; border-radius:8px; padding:20px; margin-bottom:16px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
-.toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-.toolbar .search input { padding:8px 12px; border:1px solid #ddd; border-radius:6px; width:280px; font-size:13px; }
-.toolbar .search input:focus { outline:none; border-color:#ff8800; box-shadow:0 0 0 2px rgba(255,136,0,.12); }
-.btn { padding:8px 16px; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:500; display:inline-flex; align-items:center; gap:6px; }
-.btn-primary { background:#ff8800; color:#fff; }
-.btn-primary:hover { background:#e67a00; }
-.btn-outline { background:#fff; border:1px solid #d9d9d9; color:#555; }
-.btn-outline:hover { border-color:#ff8800; color:#ff8800; }
-.btn-sm { padding:5px 10px; font-size:12px; }
-.btn-link { background:none; border:none; color:#1890ff; cursor:pointer; font-size:13px; padding:4px 8px; }
-.btn-link:hover { color:#ff8800; }
-.btn-link.danger { color:#ff4d4f; }
-.data-table { width:100%; border-collapse:collapse; font-size:13px; }
-.data-table th { background:#fafafa; padding:12px; text-align:left; font-weight:600; color:#555; border-bottom:2px solid #e8e8e8; white-space:nowrap; }
-.data-table td { padding:12px; border-bottom:1px solid #f0f0f0; vertical-align:middle; }
-.data-table tbody tr:hover td { background:#fffdf9; }
-.badge { display:inline-block; padding:2px 10px; border-radius:10px; font-size:11px; font-weight:500; }
-.badge-green { background:#f6ffed; color:#52c41a; border:1px solid #b7eb8f; }
-.badge-gray { background:#fafafa; color:#999; border:1px solid #d9d9d9; }
-.tag { display:inline-block; padding:1px 8px; border-radius:3px; font-size:11px; border:1px solid; }
-.tag-blue { background:#e6f7ff; color:#1890ff; border-color:#91d5ff; }
-.stat-cards { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:16px; }
-.stat-card { background:#fff; border-radius:8px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,.06); display:flex; align-items:center; gap:16px; }
-.stat-card .stat-icon { width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
-.stat-card .stat-icon.orange { background:rgba(255,136,0,.1); color:#ff8800; }
-.stat-card .stat-icon.green { background:rgba(82,196,26,.1); color:#52c41a; }
-.stat-card .stat-icon.blue { background:rgba(24,144,255,.1); color:#1890ff; }
-.stat-card .stat-icon.red { background:rgba(255,77,79,.1); color:#ff4d4f; }
-.stat-card .stat-info .stat-value { font-size:24px; font-weight:700; color:#1a1a1a; }
-.stat-card .stat-info .stat-label { font-size:12px; color:#999; margin-top:2px; }
-.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center; }
-.modal-overlay.show { display:flex; }
-.modal { background:#fff; border-radius:12px; width:640px; max-height:85vh; overflow-y:auto; box-shadow:0 12px 40px rgba(0,0,0,.15); }
-.modal-lg { width:800px; }
-.modal-header { padding:16px 24px; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between; align-items:center; }
-.modal-header h3 { font-size:16px; font-weight:600; }
-.modal-close { background:none; border:none; font-size:22px; cursor:pointer; color:#999; width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:6px; }
-.modal-close:hover { background:#f5f5f5; color:#333; }
-.modal-body { padding:24px; }
-.modal-footer { padding:12px 24px; border-top:1px solid #f0f0f0; text-align:right; display:flex; justify-content:flex-end; gap:8px; }
-.form-group { margin-bottom:16px; }
-.form-group label { display:block; margin-bottom:6px; font-size:13px; font-weight:500; color:#333; }
-.form-group label .req { color:#ff4d4f; margin-right:2px; }
-.form-group input, .form-group select { width:100%; padding:8px 12px; border:1px solid #d9d9d9; border-radius:6px; font-size:13px; }
-.form-group input:focus, .form-group select:focus { outline:none; border-color:#ff8800; }
-.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-.sub-table { width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; }
-.sub-table th { background:#f0f0f0; padding:8px 10px; text-align:left; font-weight:600; color:#555; border:1px solid #e8e8e8; }
-.sub-table td { padding:8px 10px; border:1px solid #e8e8e8; background:#fff; }
-::-webkit-scrollbar { width:6px; }
-::-webkit-scrollbar-thumb { background:#d9d9d9; border-radius:3px; }
+.sidebar-logo-icon { width:32px; height:32px; background:#ff8800; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:600; }
+.sidebar-logo-text { color:#fff; font-size:16px; font-weight:600; }
+.sidebar-menu { flex:1; padding:16px 0; overflow-y:auto; }
+.menu-item { display:flex; align-items:center; padding:12px 24px; color:rgba(255,255,255,.65); cursor:pointer; gap:12px; transition:all .2s; }
+.menu-item:hover { background:rgba(255,255,255,.08); color:#fff; }
+.menu-item.active { background:#1890ff; color:#fff; }
+.menu-item-icon { width:16px; text-align:center; }
+.menu-item-text { flex:1; }
+.main-content { flex:1; margin-left:240px; margin-top:56px; padding:20px; }
+.page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.page-title { font-size:20px; font-weight:600; color:#333; }
+.page-actions { display:flex; gap:12px; }
+.btn { padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-size:14px; display:flex; align-items:center; gap:6px; transition:all .2s; }
+.btn-primary { background:#1890ff; color:#fff; }
+.btn-primary:hover { background:#40a9ff; }
+.btn-default { background:#fff; border:1px solid #d9d9d9; color:#333; }
+.btn-default:hover { border-color:#1890ff; color:#1890ff; }
+.search-bar { background:#fff; padding:16px; border-radius:8px; margin-bottom:20px; display:flex; flex-wrap:wrap; gap:16px; align-items:center; }
+.search-item { display:flex; align-items:center; gap:8px; }
+.search-item label { color:#666; white-space:nowrap; }
+.search-input, .search-select { padding:8px 12px; border:1px solid #d9d9d9; border-radius:6px; font-size:14px; width:200px; }
+.search-input:focus, .search-select:focus { outline:none; border-color:#1890ff; box-shadow:0 0 0 2px rgba(24,144,255,.2); }
+.search-buttons { display:flex; gap:8px; margin-left:auto; }
+.table-container { background:#fff; border-radius:8px; overflow:hidden; }
+.table-header { display:flex; align-items:center; padding:16px; border-bottom:1px solid #e8e8e8; justify-content:space-between; }
+.table-title { font-size:16px; font-weight:600; }
+.table-actions { display:flex; gap:8px; }
+table { width:100%; border-collapse:collapse; }
+th, td { padding:12px 16px; text-align:left; border-bottom:1px solid #f0f0f0; }
+th { background:#fafafa; font-weight:600; color:#666; }
+tr:hover { background:#fafafa; }
+.status-tag { padding:4px 8px; border-radius:4px; font-size:12px; }
+.status-tag.online { background:#f6ffed; color:#52c41a; border:1px solid #b7eb8f; }
+.status-tag.offline { background:#fff2f0; color:#ff4d4f; border:1px solid #ffccc7; }
+.action-buttons { display:flex; gap:8px; }
+.btn-link { background:none; border:none; color:#1890ff; cursor:pointer; font-size:14px; }
+.btn-link:hover { color:#40a9ff; }
+.pagination { display:flex; align-items:center; justify-content:flex-end; padding:16px; gap:12px; }
+.pagination-info { color:#666; }
+.pagination-buttons { display:flex; gap:4px; }
+.page-btn { width:32px; height:32px; border:1px solid #d9d9d9; background:#fff; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.page-btn:hover { border-color:#1890ff; color:#1890ff; }
+.page-btn.active { background:#1890ff; border-color:#1890ff; color:#fff; }
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; z-index:100; display:none; }
+.modal { background:#fff; border-radius:8px; width:600px; max-width:90vw; max-height:90vh; overflow:auto; }
+.modal-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #e8e8e8; }
+.modal-title { font-size:16px; font-weight:600; }
+.modal-close { background:none; border:none; font-size:20px; cursor:pointer; color:#999; }
+.modal-body { padding:20px; }
+.form-row { display:flex; gap:16px; margin-bottom:16px; }
+.form-item { flex:1; display:flex; flex-direction:column; gap:6px; }
+.form-item label { color:#333; font-weight:500; }
+.form-item input, .form-item select, .form-item textarea { padding:8px 12px; border:1px solid #d9d9d9; border-radius:6px; font-size:14px; }
+.form-item input:focus, .form-item select:focus, .form-item textarea:focus { outline:none; border-color:#1890ff; box-shadow:0 0 0 2px rgba(24,144,255,.2); }
+.form-item textarea { resize:none; min-height:80px; }
+.modal-footer { display:flex; justify-content:flex-end; gap:12px; padding:16px 20px; border-top:1px solid #e8e8e8; }
+@media (max-width: 1200px) {
+    .sidebar { width:200px; }
+    .header, .main-content { margin-left:200px; }
+}
+@media (max-width: 768px) {
+    .sidebar { width:0; transform:translateX(-100%); }
+    .sidebar.open { transform:translateX(0); width:240px; }
+    .header, .main-content { margin-left:0; left:0; }
+    .form-row { flex-direction:column; }
+}
 </style>
 </head>
 <body>
 <div class="app-container">
-<div class="sidebar">
-  <div class="sidebar-logo">
-    <div class="sidebar-logo-icon">&#9889;</div>
-    <div><div class="sidebar-logo-text">星能能源</div><div class="sidebar-logo-sub">综合能源运营管理平台</div></div>
-  </div>
-  <div class="sidebar-section-title">空调多联机管理</div>
-  <nav class="sidebar-nav">
-    <a href="#" class="active"><span class="nav-icon">&#9881;</span>型号维护</a>
-    <a href="#"><span class="nav-icon">&#128736;</span>设备创建</a>
-    <a href="#"><span class="nav-icon">&#128202;</span>设备监测</a>
-  </nav>
-  <div class="sidebar-footer">星能SaaS v2.0 &copy; 2026</div>
-</div>
-<div class="header">
-  <div class="header-brand"><span>星能SaaS</span> | 空调多联机管理</div>
-  <div class="header-right"><div class="header-user"><div class="header-avatar">管</div><span>管理员</span></div></div>
-</div>
-<div class="main-content">
-  <div class="tab-bar"><div class="breadcrumb">首页 / 空调多联机 / <span>型号维护</span></div></div>
-  <div class="page-header"><h2>型号维护</h2><p>管理空调多联机型号规格、功率参数及室内机配置</p></div>
-  <div class="content-area">
-    <div class="stat-cards">
-      <div class="stat-card"><div class="stat-icon orange">&#9881;</div><div class="stat-info"><div class="stat-value" id="sTotal">3</div><div class="stat-label">型号总数</div></div></div>
-      <div class="stat-card"><div class="stat-icon green">&#10004;</div><div class="stat-info"><div class="stat-value" id="sActive">3</div><div class="stat-label">启用中</div></div></div>
-      <div class="stat-card"><div class="stat-icon blue">&#128268;</div><div class="stat-info"><div class="stat-value" id="sOutdoor">4</div><div class="stat-label">外机总数</div></div></div>
-      <div class="stat-card"><div class="stat-icon red">&#127968;</div><div class="stat-info"><div class="stat-value" id="sIndoor">18</div><div class="stat-label">内机总数</div></div></div>
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">S</div>
+            <div class="sidebar-logo-text">星能SaaS</div>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-item">
+                <span class="menu-item-icon">📊</span>
+                <span class="menu-item-text">数据看板</span>
+            </div>
+            <div class="menu-item">
+                <span class="menu-item-icon">⚡</span>
+                <span class="menu-item-text">设备监控</span>
+            </div>
+            <div class="menu-item active">
+                <span class="menu-item-icon">🔧</span>
+                <span class="menu-item-text">型号维护</span>
+            </div>
+            <div class="menu-item">
+                <span class="menu-item-icon">📈</span>
+                <span class="menu-item-text">运行分析</span>
+            </div>
+            <div class="menu-item">
+                <span class="menu-item-icon">📋</span>
+                <span class="menu-item-text">工单管理</span>
+            </div>
+            <div class="menu-item">
+                <span class="menu-item-icon">👥</span>
+                <span class="menu-item-text">用户管理</span>
+            </div>
+            <div class="menu-item">
+                <span class="menu-item-icon">⚙️</span>
+                <span class="menu-item-text">系统设置</span>
+            </div>
+        </div>
     </div>
-    <div class="card">
-      <div class="toolbar">
-        <div class="search"><input type="text" id="modelSearch" placeholder="搜索型号名称、空调类型..." oninput="renderTable(this.value)"></div>
-        <button class="btn btn-primary" onclick="openModal()">&#43; 新增型号</button>
-      </div>
-      <table class="data-table">
-        <thead><tr><th>型号名称</th><th>空调类型</th><th>额定功率(kW)</th><th>外机数</th><th>内机数</th><th>母线类型</th><th>状态</th><th>操作</th></tr></thead>
-        <tbody id="modelTable"></tbody>
-      </table>
+    <div class="header">
+        <div class="header-brand">星能SaaS | <span>型号维护</span></div>
+        <div class="header-right">
+            <div class="header-user">
+                <div class="header-avatar">A</div>
+                <span>Admin</span>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-</div>
-
-<div class="modal-overlay" id="modelModal">
-  <div class="modal modal-lg">
-    <div class="modal-header"><h3 id="modalTitle">新增型号</h3><button class="modal-close" onclick="closeModal()">&times;</button></div>
-    <div class="modal-body">
-      <input type="hidden" id="editId">
-      <div class="form-row">
-        <div class="form-group"><label><span class="req">*</span> 型号名称</label><input type="text" id="mName" placeholder="如 格力GMV-500WM/A"></div>
-        <div class="form-group"><label><span class="req">*</span> 空调类型</label><select id="mType"><option>多联机</option><option>风冷热泵</option><option>其他类型</option></select></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label><span class="req">*</span> 额定功率 (kW)</label><input type="number" id="mPower" step="0.01" placeholder="0.00"></div>
-        <div class="form-group"><label><span class="req">*</span> 母线类型</label><select id="mBus"><option>三相四线</option><option>三相三线</option><option>单相</option></select></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>室外机数量</label><input type="number" id="mOQty" value="1" min="1"></div>
-        <div class="form-group"><label>室外机总额定功率 (kW)</label><input type="number" id="mOPower" step="0.01"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>室内机数量</label><input type="number" id="mIQty" value="1" min="1"></div>
-        <div class="form-group"><label>室内机总额定功率 (kW)</label><input type="number" id="mIPower" step="0.01"></div>
-      </div>
-      <hr style="border:none;border-top:1px solid #f0f0f0;margin:16px 0;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <h4 style="font-size:14px;">室内机列表</h4>
-        <button class="btn btn-sm btn-outline" onclick="addIU()">&#43; 添加内机</button>
-      </div>
-      <div style="overflow-x:auto;">
-        <table class="sub-table"><thead><tr><th>内机编号</th><th>制冷量(kW)</th><th>制热量(kW)</th><th>安装位置</th><th>序列号</th><th>风速(1-5)</th><th>电辅热</th><th></th></tr></thead>
-        <tbody id="iuBody"></tbody></table>
-      </div>
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">型号维护</h1>
+            <div class="page-actions">
+                <button class="btn btn-primary" onclick="openModal()">+ 新增型号</button>
+                <button class="btn btn-default">导出</button>
+            </div>
+        </div>
+        <div class="search-bar">
+            <div class="search-item">
+                <label>型号名称</label>
+                <input type="text" class="search-input" placeholder="请输入型号名称">
+            </div>
+            <div class="search-item">
+                <label>设备类型</label>
+                <select class="search-select">
+                    <option value="">全部</option>
+                    <option value="ac">空调</option>
+                    <option value="bms">储能</option>
+                    <option value="pcu">变流器</option>
+                </select>
+            </div>
+            <div class="search-item">
+                <label>状态</label>
+                <select class="search-select">
+                    <option value="">全部</option>
+                    <option value="1">启用</option>
+                    <option value="0">停用</option>
+                </select>
+            </div>
+            <div class="search-buttons">
+                <button class="btn btn-primary">查询</button>
+                <button class="btn btn-default">重置</button>
+            </div>
+        </div>
+        <div class="table-container">
+            <div class="table-header">
+                <div class="table-title">型号列表</div>
+                <div class="table-actions">
+                    <button class="btn btn-default">批量启用</button>
+                    <button class="btn btn-default">批量停用</button>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox"></th>
+                        <th>型号ID</th>
+                        <th>型号名称</th>
+                        <th>设备类型</th>
+                        <th>额定功率(kW)</th>
+                        <th>能效等级</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>MD-AC-001</td>
+                        <td>格力KFR-35GW</td>
+                        <td>空调</td>
+                        <td>1.5</td>
+                        <td>1级</td>
+                        <td><span class="status-tag online">启用</span></td>
+                        <td>2025-01-15 10:30:00</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-link" onclick="openModal()">编辑</button>
+                                <button class="btn-link" style="color:#ff4d4f">删除</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>MD-AC-002</td>
+                        <td>美的KFR-26GW</td>
+                        <td>空调</td>
+                        <td>1.0</td>
+                        <td>1级</td>
+                        <td><span class="status-tag online">启用</span></td>
+                        <td>2025-01-16 14:20:00</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-link" onclick="openModal()">编辑</button>
+                                <button class="btn-link" style="color:#ff4d4f">删除</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>MD-BMS-001</td>
+                        <td>宁德时代BMS-100</td>
+                        <td>储能</td>
+                        <td>100</td>
+                        <td>-</td>
+                        <td><span class="status-tag offline">停用</span></td>
+                        <td>2025-01-17 09:15:00</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-link" onclick="openModal()">编辑</button>
+                                <button class="btn-link" style="color:#ff4d4f">删除</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <div class="pagination-info">共 3 条，第 1/1 页</div>
+                <div class="pagination-buttons">
+                    <button class="page-btn">上一页</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">下一页</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveModel()">保存</button></div>
-  </div>
 </div>
-
-<div class="modal-overlay" id="viewModal">
-  <div class="modal modal-lg">
-    <div class="modal-header"><h3>型号详情</h3><button class="modal-close" onclick="document.getElementById('viewModal').classList.remove('show')">&times;</button></div>
-    <div class="modal-body"><div id="viewContent"></div></div>
-    <div class="modal-footer"><button class="btn btn-outline" onclick="document.getElementById('viewModal').classList.remove('show')">关闭</button></div>
-  </div>
+<div class="modal-overlay" id="modal">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title">新增型号</div>
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-item">
+                    <label>型号名称 *</label>
+                    <input type="text" placeholder="请输入型号名称">
+                </div>
+                <div class="form-item">
+                    <label>设备类型 *</label>
+                    <select>
+                        <option value="">请选择</option>
+                        <option value="ac">空调</option>
+                        <option value="bms">储能</option>
+                        <option value="pcu">变流器</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-item">
+                    <label>额定功率(kW)</label>
+                    <input type="number" placeholder="请输入额定功率">
+                </div>
+                <div class="form-item">
+                    <label>能效等级</label>
+                    <select>
+                        <option value="">请选择</option>
+                        <option value="1">1级</option>
+                        <option value="2">2级</option>
+                        <option value="3">3级</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-item">
+                    <label>备注</label>
+                    <textarea placeholder="请输入备注信息"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" onclick="closeModal()">取消</button>
+            <button class="btn btn-primary">确定</button>
+        </div>
+    </div>
 </div>
-
 <script>
-var models = [
-  {id:1,name:'格力GMV-500WM/A',type:'多联机',power:50,oQty:2,oPower:50,iQty:8,iPower:32,bus:'三相四线',status:'启用',
-   ius:[{id:'IU-01',cool:4,heat:4.5,loc:'A栋1层-办公室1',sn:'SN-GL-001',sp:3,aux:true},{id:'IU-02',cool:4,heat:4.5,loc:'A栋1层-办公室2',sn:'SN-GL-002',sp:3,aux:true},{id:'IU-03',cool:5,heat:5.6,loc:'A栋1层-会议室',sn:'SN-GL-003',sp:4,aux:false},{id:'IU-04',cool:3.6,heat:4,loc:'A栋1层-前台',sn:'SN-GL-004',sp:2,aux:false},{id:'IU-05',cool:4,heat:4.5,loc:'A栋1层-走廊',sn:'SN-GL-005',sp:2,aux:false},{id:'IU-06',cool:4,heat:4.5,loc:'A栋1层-机房',sn:'SN-GL-006',sp:5,aux:true},{id:'IU-07',cool:3.6,heat:4,loc:'A栋1层-休息区',sn:'SN-GL-007',sp:2,aux:false},{id:'IU-08',cool:3.8,heat:4.4,loc:'A栋1层-仓库',sn:'SN-GL-008',sp:3,aux:true}]},
-  {id:2,name:'美的MDV-280W/D2SN1-8R0',type:'多联机',power:28,oQty:1,oPower:28,iQty:6,iPower:22,bus:'三相三线',status:'启用',
-   ius:[{id:'IU-01',cool:3.6,heat:4,loc:'B栋3层-办公室1',sn:'SN-MD-001',sp:3,aux:false},{id:'IU-02',cool:3.6,heat:4,loc:'B栋3层-办公室2',sn:'SN-MD-002',sp:3,aux:false},{id:'IU-03',cool:4.5,heat:5,loc:'B栋3层-会议室',sn:'SN-MD-003',sp:4,aux:true},{id:'IU-04',cool:3.6,heat:4,loc:'B栋3层-走廊',sn:'SN-MD-004',sp:2,aux:false},{id:'IU-05',cool:3.6,heat:4,loc:'B栋3层-茶水间',sn:'SN-MD-005',sp:2,aux:false},{id:'IU-06',cool:3.1,heat:3.5,loc:'B栋3层-储藏室',sn:'SN-MD-006',sp:1,aux:false}]},
-  {id:3,name:'海尔MRV-160',type:'风冷热泵',power:16,oQty:1,oPower:16,iQty:4,iPower:14,bus:'单相',status:'启用',
-   ius:[{id:'IU-01',cool:4,heat:4.5,loc:'C栋2层-办公室1',sn:'SN-HR-001',sp:3,aux:true},{id:'IU-02',cool:4,heat:4.5,loc:'C栋2层-办公室2',sn:'SN-HR-002',sp:3,aux:true},{id:'IU-03',cool:3.5,heat:3.8,loc:'C栋2层-会议室',sn:'SN-HR-003',sp:3,aux:false},{id:'IU-04',cool:2.5,heat:2.8,loc:'C栋2层-接待室',sn:'SN-HR-004',sp:2,aux:false}]}
-];
-var tempIUs = [];
-
-function renderTable(f) {
-  f = f||'';
-  var t = document.getElementById('modelTable');
-  var list = models.filter(function(m){return m.name.indexOf(f)>=0||m.type.indexOf(f)>=0;});
-  var h = '';
-  for(var i=0;i<list.length;i++){
-    var m=list[i], sc=m.status==='启用'?'badge-green':'badge-gray';
-    h+='<tr><td><strong>'+m.name+'</strong></td><td><span class="tag tag-blue">'+m.type+'</span></td><td>'+m.power.toFixed(2)+'</td><td>'+m.oQty+'</td><td>'+m.iQty+'</td><td>'+m.bus+'</td><td><span class="badge '+sc+'">'+m.status+'</span></td><td><button class="btn-link" onclick="viewM('+m.id+')">查看</button> <button class="btn-link" onclick="openModal('+m.id+')">编辑</button> <button class="btn-link danger" onclick="delM('+m.id+')">删除</button></td></tr>';
-  }
-  if(!list.length) h='<tr><td colspan="8" style="text-align:center;color:#999;padding:40px 0;">暂无数据</td></tr>';
-  t.innerHTML=h;
-  document.getElementById('sTotal').textContent=models.length;
-  document.getElementById('sActive').textContent=models.filter(function(m){return m.status==='启用';}).length;
-  document.getElementById('sOutdoor').textContent=models.reduce(function(s,m){return s+m.oQty;},0);
-  document.getElementById('sIndoor').textContent=models.reduce(function(s,m){return s+m.iQty;},0);
+function openModal() {
+    document.getElementById('modal').style.display = 'flex';
 }
-
-function openModal(id) {
-  document.getElementById('editId').value = id||'';
-  document.getElementById('modalTitle').textContent = id?'编辑型号':'新增型号';
-  if(id){
-    var m=models.find(function(x){return x.id===id;});
-    document.getElementById('mName').value=m.name;
-    document.getElementById('mType').value=m.type;
-    document.getElementById('mPower').value=m.power;
-    document.getElementById('mBus').value=m.bus;
-    document.getElementById('mOQty').value=m.oQty;
-    document.getElementById('mOPower').value=m.oPower;
-    document.getElementById('mIQty').value=m.iQty;
-    document.getElementById('mIPower').value=m.iPower;
-    tempIUs=JSON.parse(JSON.stringify(m.ius||[]));
-  } else {
-    ['mName','mPower','mOPower','mIPower'].forEach(function(f){document.getElementById(f).value='';});
-    document.getElementById('mType').value='多联机';
-    document.getElementById('mBus').value='三相四线';
-    document.getElementById('mOQty').value='1';
-    document.getElementById('mIQty').value='1';
-    tempIUs=[];
-  }
-  renderIU();
-  document.getElementById('modelModal').classList.add('show');
+function closeModal() {
+    document.getElementById('modal').style.display = 'none';
 }
-function closeModal(){document.getElementById('modelModal').classList.remove('show');}
-function addIU(){tempIUs.push({id:'IU-'+(tempIUs.length+1),cool:4,heat:4.5,loc:'',sn:'',sp:3,aux:false});renderIU();}
-function removeIU(i){tempIUs.splice(i,1);renderIU();}
-function renderIU(){
-  var t=document.getElementById('iuBody');
-  if(!tempIUs.length){t.innerHTML='<tr><td colspan="8" style="text-align:center;color:#999;padding:20px;">暂无室内机</td></tr>';return;}
-  var h='';
-  for(var i=0;i<tempIUs.length;i++){
-    var u=tempIUs[i];
-    h+='<tr><td><input type="text" value="'+u.id+'" onchange="tempIUs['+i+'].id=this.value" style="width:65px;padding:4px 6px;border:1px solid #d9d9d9;border-radius:4px;font-size:12px;"></td>';
-    h+='<td><input type="number" value="'+u.cool+'" step="0.1" onchange="tempIUs['+i+'].cool=parseFloat(this.value)" style="width:70px;padding:4px 6px;border:1px solid #d9d9d9;border-radius:4px;font-size:12px;"></td>';
-    h+='<td><input type="number" value="'+u.heat+'" step="0.1" onchange="tempIUs['+i+'].heat=parseFloat(this.value)" style="width:70px;padding:4px 6px;border:1px solid #d9d9d9;border-radius:4px;font-size:12px;"></td>';
-    h+='<td><input type="text" value="'+(u.loc||'')+'" onchange="tempIUs['+i+'].loc=this.value" style="width:130px;padding:4px 6px;border:1px solid #d9d9d9;border-radius:4px;font-size:12px;"></td>';
-    h+='<td><input type="text" value="'+(u.sn||'')+'" onchange="tempIUs['+i+'].sn=this.value" style="width:110px;padding:4px 6px;border:1px solid #d9d9d9;border-radius:4px;font-size:12px;"></td>';
-    h+='<td><select onchange="tempIUs['+i+'].sp=parseInt(this.value)" style="padding:4px 6px;border:1px solid #d9d9d9;border-radius:4px;font-size:12px;"><option value="1"'+(u.sp===1?' selected':'')+'>1档</option><option value="2"'+(u.sp===2?' selected':'')+'>2档</option><option value="3"'+(u.sp===3?' selected':'')+'>3档</option><option value="4"'+(u.sp===4?' selected':'')+'>4档</option><option value="5"'+(u.sp===5?' selected':'')+'>5档</option></select></td>';
-    h+='<td><input type="checkbox" '+(u.aux?'checked':'')+' onchange="tempIUs['+i+'].aux=this.checked"></td>';
-    h+='<td><button class="btn-link danger" onclick="removeIU('+i+')">删除</button></td></tr>';
-  }
-  t.innerHTML=h;
-}
-function saveModel(){
-  var eid=document.getElementById('editId').value,name=document.getElementById('mName').value.trim(),power=parseFloat(document.getElementById('mPower').value);
-  if(!name){alert('请填写型号名称');return;}
-  if(isNaN(power)){alert('请填写额定功率');return;}
-  var data={name:name,type:document.getElementById('mType').value,power:power,bus:document.getElementById('mBus').value,oQty:parseInt(document.getElementById('mOQty').value)||1,oPower:parseFloat(document.getElementById('mOPower').value)||0,iQty:parseInt(document.getElementById('mIQty').value)||1,iPower:parseFloat(document.getElementById('mIPower').value)||0,status:'启用',ius:JSON.parse(JSON.stringify(tempIUs))};
-  if(eid){var m=models.find(function(x){return x.id===parseInt(eid);});for(var k in data)m[k]=data[k];}
-  else{data.id=models.length?Math.max.apply(null,models.map(function(x){return x.id;}))+1:1;models.push(data);}
-  closeModal();renderTable(document.getElementById('modelSearch').value);
-}
-function delM(id){if(!confirm('确定删除？'))return;models=models.filter(function(x){return x.id!==id;});renderTable(document.getElementById('modelSearch').value);}
-function viewM(id){
-  var m=models.find(function(x){return x.id===id;});if(!m)return;
-  var c=document.getElementById('viewContent'),h='<div class="form-row"><div class="form-group"><label>型号名称</label><div style="font-size:15px;font-weight:600;">'+m.name+'</div></div><div class="form-group"><label>空调类型</label><div><span class="tag tag-blue">'+m.type+'</span></div></div></div>';
-  h+='<div class="form-row"><div class="form-group"><label>额定功率</label><div style="font-size:15px;font-weight:600;">'+m.power.toFixed(2)+' kW</div></div><div class="form-group"><label>母线类型</label><div>'+m.bus+'</div></div></div>';
-  h+='<div class="form-row"><div class="form-group"><label>外机数量/总功率</label><div>'+m.oQty+'台 / '+m.oPower.toFixed(2)+' kW</div></div><div class="form-group"><label>内机数量/总功率</label><div>'+m.iQty+'台 / '+m.iPower.toFixed(2)+' kW</div></div></div>';
-  if(m.ius&&m.ius.length){h+='<hr style="border:none;border-top:1px solid #f0f0f0;margin:16px 0;"><h4 style="font-size:14px;margin-bottom:12px;">室内机列表</h4><table class="sub-table"><thead><tr><th>编号</th><th>制冷量</th><th>制热量</th><th>位置</th><th>序列号</th><th>风速</th><th>电辅热</th></tr></thead><tbody>';for(var i=0;i<m.ius.length;i++){var u=m.ius[i];h+='<tr><td>'+u.id+'</td><td>'+u.cool+' kW</td><td>'+u.heat+' kW</td><td>'+(u.loc||'-')+'</td><td>'+(u.sn||'-')+'</td><td>'+u.sp+'档</td><td>'+(u.aux?'是':'否')+'</td></tr>';}h+='</tbody></table>';}
-  c.innerHTML=h;document.getElementById('viewModal').classList.add('show');
-}
-renderTable('');
+document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
 </script>
 </body>
 </html>
