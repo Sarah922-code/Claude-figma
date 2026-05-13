@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星能SaaS | 运维月报 - 2025年4月</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; }
+body { font-family: -apple-system, "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif; background:#f5f7fa; color:#333; font-size:14px; }
+.report-container { max-width:1280px; margin:0 auto; padding:24px; }
+.report-header { background:linear-gradient(135deg, #001529 0%, #003a70 100%); border-radius:12px; padding:32px 40px; margin-bottom:24px; color:#fff; display:flex; justify-content:space-between; align-items:center; }
+.report-header .brand { font-size:14px; color:rgba(255,255,255,.5); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+.report-header .brand .logo { width:28px; height:28px; background:#ff8800; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; }
+.report-header h1 { font-size:28px; font-weight:700; margin-bottom:4px; }
+.report-header .subtitle { font-size:14px; color:rgba(255,255,255,.6); }
+.report-header .meta { text-align:right; }
+.report-header .meta .period { font-size:20px; font-weight:600; margin-bottom:4px; }
+.report-header .meta .generated { font-size:12px; color:rgba(255,255,255,.4); }
+.report-header .meta .station { font-size:13px; color:rgba(255,255,255,.7); margin-bottom:12px; }
+.section { margin-bottom:24px; }
+.section-header { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.section-header .section-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; }
+.section-header .section-icon.orange { background:rgba(255,136,0,.1); color:#ff8800; }
+.section-header .section-icon.blue { background:rgba(24,144,255,.1); color:#1890ff; }
+.section-header .section-icon.green { background:rgba(82,196,26,.1); color:#52c41a; }
+.section-header .section-icon.red { background:rgba(255,77,79,.1); color:#ff4d4f; }
+.section-header .section-icon.purple { background:rgba(114,46,209,.1); color:#722ed1; }
+.section-header .section-icon.cyan { background:rgba(19,194,194,.1); color:#13c2c2; }
+.section-header h2 { font-size:18px; font-weight:600; color:#1a1a1a; }
+.card { background:#fff; border-radius:8px; padding:20px; margin-bottom:16px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+.stat-cards { display:grid; grid-template-columns:repeat(5,1fr); gap:16px; }
+.stat-card { background:#fff; border-radius:8px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,.06); display:flex; align-items:center; gap:16px; }
+.stat-card .stat-icon { width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.stat-card .stat-icon.orange { background:rgba(255,136,0,.1); color:#ff8800; }
+.stat-card .stat-icon.green { background:rgba(82,196,26,.1); color:#52c41a; }
+.stat-card .stat-icon.blue { background:rgba(24,144,255,.1); color:#1890ff; }
+.stat-card .stat-icon.red { background:rgba(255,77,79,.1); color:#ff4d4f; }
+.stat-card .stat-icon.purple { background:rgba(114,46,209,.1); color:#722ed1; }
+.stat-card .stat-info .stat-value { font-size:24px; font-weight:700; color:#1a1a1a; }
+.stat-card .stat-info .stat-label { font-size:12px; color:#999; margin-top:2px; }
+.stat-card .stat-info .stat-trend { font-size:11px; margin-top:2px; }
+.stat-card .stat-info .stat-trend.up { color:#ff4d4f; }
+.stat-card .stat-info .stat-trend.down { color:#52c41a; }
+.stat-card .stat-info .stat-trend.good { color:#52c41a; }
+.stat-card .stat-info .stat-trend.bad { color:#ff4d4f; }
+.chart-area { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.chart-placeholder { background:#fff; border-radius:8px; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; }
+.chart-placeholder .chart-header { padding:12px 20px; border-bottom:1px solid #f0f0f0; font-size:14px; font-weight:600; }
+.chart-placeholder .chart-body { padding:20px; }
+.data-table { width:100%; border-collapse:collapse; font-size:13px; }
+.data-table th { background:#fafafa; padding:12px; text-align:left; font-weight:600; color:#555; border-bottom:2px solid #e8e8e8; white-space:nowrap; }
+.data-table td { padding:12px; border-bottom:1px solid #f0f0f0; vertical-align:middle; }
+.data-table tbody tr:hover td { background:#fffdf9; }
+.badge { display:inline-block; padding:2px 10px; border-radius:10px; font-size:11px; font-weight:500; }
+.badge-green { background:#f6ffed; color:#52c41a; border:1px solid #b7eb8f; }
+.badge-red { background:#fff2f0; color:#ff4d4f; border:1px solid #ffa39e; }
+.badge-orange { background:#fff7e6; color:#fa8c16; border:1px solid #ffd591; }
+.badge-blue { background:#e6f7ff; color:#1890ff; border:1px solid #91d5ff; }
+.badge-gray { background:#fafafa; color:#999; border:1px solid #d9d9d9; }
+.badge-purple { background:#f9f0ff; color:#722ed1; border:1px solid #d3adf7; }
+.bar-chart { display:flex; align-items:flex-end; gap:8px; height:180px; padding:16px 0; }
+.bar-chart .bar-group { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; }
+.bar-chart .bar { width:100%; max-width:48px; border-radius:4px 4px 0 0; }
+.bar-chart .bar-label { font-size:11px; color:#999; }
+.bar-chart .bar-value { font-size:11px; font-weight:600; color:#333; }
+.donut-container { display:flex; align-items:center; gap:32px; }
+.donut { width:160px; height:160px; border-radius:50%; flex-shrink:0; }
+.donut-legend { display:flex; flex-direction:column; gap:10px; }
+.donut-legend .legend-item { display:flex; align-items:center; gap:8px; font-size:13px; }
+.donut-legend .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.donut-legend .legend-value { margin-left:auto; font-weight:600; padding-left:16px; }
+.progress-bar { height:8px; background:#f0f0f0; border-radius:4px; overflow:hidden; }
+.progress-bar .fill { height:100%; border-radius:4px; }
+.progress-bar .fill.orange { background:#ff8800; }
+.progress-bar .fill.green { background:#52c41a; }
+.progress-bar .fill.blue { background:#1890ff; }
+.progress-bar .fill.red { background:#ff4d4f; }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+.device-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.device-card { background:#fafafa; border-radius:8px; padding:16px; }
+.device-card .device-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.device-card .device-name { font-size:14px; font-weight:600; }
+.device-card .device-type { font-size:12px; color:#999; margin-top:2px; }
+.device-card .device-stats { display:flex; flex-direction:column; gap:8px; }
+.device-card .device-stat { display:flex; justify-content:space-between; font-size:12px; }
+.device-card .device-stat .label { color:#888; }
+.device-card .device-stat .value { font-weight:600; }
+.timeline { position:relative; padding-left:24px; }
+.timeline::before { content:''; position:absolute; left:8px; top:4px; bottom:4px; width:2px; background:#e8e8e8; }
+.timeline-item { position:relative; padding-bottom:20px; }
+.timeline-item:last-child { padding-bottom:0; }
+.timeline-item .dot { position:absolute; left:-20px; top:4px; width:12px; height:12px; border-radius:50%; border:2px solid; background:#fff; }
+.timeline-item .dot.orange { border-color:#ff8800; }
+.timeline-item .dot.green { border-color:#52c41a; }
+.timeline-item .dot.blue { border-color:#1890ff; }
+.timeline-item .dot.red { border-color:#ff4d4f; }
+.timeline-item .time { font-size:12px; color:#999; margin-bottom:2px; }
+.timeline-item .content { font-size:13px; color:#333; }
+.timeline-item .content strong { color:#1a1a1a; }
+.report-footer { text-align:center; padding:24px 0; color:#bbb; font-size:12px; border-top:1px solid #e8e8e8; margin-top:24px; }
+.summary-row { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px; }
+.summary-item { background:#fafafa; border-radius:6px; padding:14px 16px; text-align:center; }
+.summary-item .value { font-size:22px; font-weight:700; color:#1a1a1a; }
+.summary-item .label { font-size:12px; color:#999; margin-top:2px; }
+.ranking-list { display:flex; flex-direction:column; gap:8px; }
+.ranking-item { display:flex; align-items:center; gap:12px; }
+.ranking-item .rank { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+.ranking-item .rank.top1 { background:#ff8800; color:#fff; }
+.ranking-item .rank.top2 { background:#faad14; color:#fff; }
+.ranking-item .rank.top3 { background:#1890ff; color:#fff; }
+.ranking-item .rank.normal { background:#f0f0f0; color:#999; }
+.ranking-item .name { flex:1; font-size:13px; }
+.ranking-item .val { font-size:14px; font-weight:600; color:#1a1a1a; }
+.ranking-item .bar-bg { width:80px; height:6px; background:#f0f0f0; border-radius:3px; overflow:hidden; }
+.ranking-item .bar-bg .bar-fill { height:100%; border-radius:3px; background:#ff8800; }
+.kpi-row { display:flex; flex-direction:column; gap:14px; }
+.kpi-item { display:flex; flex-direction:column; gap:6px; }
+.kpi-item .kpi-header { display:flex; justify-content:space-between; align-items:center; }
+.kpi-item .kpi-label { font-size:13px; color:#666; }
+.kpi-item .kpi-value { font-size:14px; font-weight:600; color:#1a1a1a; }
+.kpi-item .progress-bar { height:6px; }
+.tag { display:inline-block; padding:1px 8px; border-radius:3px; font-size:11px; border:1px solid; }
+.tag-blue { background:#e6f7ff; color:#1890ff; border-color:#91d5ff; }
+.tag-orange { background:#fff7e6; color:#fa8c16; border-color:#ffd591; }
+.tag-green { background:#f6ffed; color:#52c41a; border-color:#b7eb8f; }
+.heatmap-grid { display:grid; grid-template-columns:40px repeat(12,1fr); gap:2px; font-size:11px; }
+.heatmap-cell { width:100%; aspect-ratio:1; border-radius:3px; }
+.heatmap-label { display:flex; align-items:center; justify-content:flex-end; padding-right:8px; color:#888; font-size:11px; }
+@media print { body { background:#fff; } .report-container { max-width:100%; padding:0; } .card { box-shadow:none; border:1px solid #e8e8e8; } }
+</style>
+</head>
+<body>
+<div class="report-container">
+
+<!-- ===== REPORT HEADER ===== -->
+<div class="report-header">
+  <div>
+    <div class="brand"><div class="logo">S</div>星能SaaS · 智慧能源管理平台</div>
+    <h1>运维月报</h1>
+    <div class="subtitle">Operations & Maintenance Monthly Report</div>
+  </div>
+  <div class="meta">
+    <div class="station">阳光新能源电站集团</div>
+    <div class="period">2025年4月</div>
+    <div class="generated">报告生成时间：2025-05-02 09:30</div>
+  </div>
+</div>
+
+<!-- ===== SECTION 1: 场站运维概览 ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon orange">📊</div>
+    <h2>一、场站运维概览</h2>
+  </div>
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="stat-icon orange">⚡</div>
+      <div class="stat-info"><div class="stat-value">1,256</div><div class="stat-label">设备总数</div><div class="stat-trend good">↑ 较上月 +23</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">🟢</div>
+      <div class="stat-info"><div class="stat-value">98.7%</div><div class="stat-label">设备在线率</div><div class="stat-trend good">↑ 0.3%</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red">⚠</div>
+      <div class="stat-info"><div class="stat-value">47</div><div class="stat-label">故障总数</div><div class="stat-trend down">↓ 较上月 -8</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue">📋</div>
+      <div class="stat-info"><div class="stat-value">132</div><div class="stat-label">工单总数</div><div class="stat-trend down">↓ 较上月 -15</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon purple">🔧</div>
+      <div class="stat-info"><div class="stat-value">96.2%</div><div class="stat-label">工单完成率</div><div class="stat-trend good">↑ 2.1%</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 2: 故障统计 ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon red">⚠</div>
+    <h2>二、故障统计分析</h2>
+  </div>
+
+  <div class="chart-area">
+    <div class="chart-placeholder">
+      <div class="chart-header">月度故障趋势（近6个月）</div>
+      <div class="chart-body">
+        <div class="bar-chart">
+          <div class="bar-group"><div class="bar-value">62</div><div class="bar" style="height:74%;background:#ff8800;"></div><div class="bar-label">11月</div></div>
+          <div class="bar-group"><div class="bar-value">55</div><div class="bar" style="height:66%;background:#ff8800;"></div><div class="bar-label">12月</div></div>
+          <div class="bar-group"><div class="bar-value">71</div><div class="bar" style="height:85%;background:#ff8800;"></div><div class="bar-label">1月</div></div>
+          <div class="bar-group"><div class="bar-value">58</div><div class="bar" style="height:70%;background:#ff8800;"></div><div class="bar-label">2月</div></div>
+          <div class="bar-group"><div class="bar-value">55</div><div class="bar" style="height:66%;background:#ff8800;"></div><div class="bar-label">3月</div></div>
+          <div class="bar-group"><div class="bar-value">47</div><div class="bar" style="height:56%;background:#52c41a;"></div><div class="bar-label">4月</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-placeholder">
+      <div class="chart-header">故障类型分布</div>
+      <div class="chart-body">
+        <div class="donut-container">
+          <div class="donut" style="background:conic-gradient(#ff8800 0deg 115deg, #1890ff 115deg 210deg, #52c41a 210deg 270deg, #ff4d4f 270deg 310deg, #722ed1 310deg 340deg, #d9d9d9 340deg 360deg);"></div>
+          <div class="donut-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#ff8800;"></div>电气故障<span class="legend-value">15</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#1890ff;"></div>通讯故障<span class="legend-value">12</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#52c41a;"></div>机械故障<span class="legend-value">8</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#ff4d4f;"></div>软件故障<span class="legend-value">5</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#722ed1;"></div>环境故障<span class="legend-value">4</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#d9d9d9;"></div>其他<span class="legend-value">3</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:14px;font-weight:600;margin-bottom:12px;">故障明细</div>
+    <table class="data-table">
+      <thead><tr><th>故障编号</th><th>发生时间</th><th>故障类型</th><th>严重等级</th><th>涉及设备</th><th>处理状态</th><th>处理时长</th></tr></thead>
+      <tbody>
+        <tr><td>F2025-047</td><td>04-28 14:22</td><td>电气故障</td><td><span class="badge badge-red">严重</span></td><td>逆变器 INV-089</td><td><span class="badge badge-green">已处理</span></td><td>2.5h</td></tr>
+        <tr><td>F2025-046</td><td>04-25 09:15</td><td>通讯故障</td><td><span class="badge badge-orange">一般</span></td><td>数据采集器 DC-012</td><td><span class="badge badge-green">已处理</span></td><td>1.2h</td></tr>
+        <tr><td>F2025-045</td><td>04-22 16:38</td><td>机械故障</td><td><span class="badge badge-orange">一般</span></td><td>跟踪支架 TK-034</td><td><span class="badge badge-green">已处理</span></td><td>4.0h</td></tr>
+        <tr><td>F2025-044</td><td>04-18 11:05</td><td>软件故障</td><td><span class="badge badge-blue">轻微</span></td><td>监控系统 CAM-007</td><td><span class="badge badge-green">已处理</span></td><td>0.5h</td></tr>
+        <tr><td>F2025-043</td><td>04-15 08:50</td><td>电气故障</td><td><span class="badge badge-red">严重</span></td><td>箱变 XB-003</td><td><span class="badge badge-green">已处理</span></td><td>6.8h</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== SECTION 3: 工单统计 ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon blue">📋</div>
+    <h2>三、工单统计分析</h2>
+  </div>
+
+  <div class="chart-area">
+    <div class="chart-placeholder">
+      <div class="chart-header">工单处理效率</div>
+      <div class="chart-body">
+        <div class="kpi-row">
+          <div class="kpi-item"><div class="kpi-header"><span class="kpi-label">工单完成率</span><span class="kpi-value">96.2%</span></div><div class="progress-bar"><div class="fill green" style="width:96.2%;"></div></div></div>
+          <div class="kpi-item"><div class="kpi-header"><span class="kpi-label">按时响应率</span><span class="kpi-value">94.8%</span></div><div class="progress-bar"><div class="fill blue" style="width:94.8%;"></div></div></div>
+          <div class="kpi-item"><div class="kpi-header"><span class="kpi-label">平均响应时间</span><span class="kpi-value">18 min</span></div><div class="progress-bar"><div class="fill orange" style="width:30%;"></div></div></div>
+          <div class="kpi-item"><div class="kpi-header"><span class="kpi-label">平均处理时长</span><span class="kpi-value">3.2 h</span></div><div class="progress-bar"><div class="fill orange" style="width:42%;"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-placeholder">
+      <div class="chart-header">工单类型分布</div>
+      <div class="chart-body">
+        <div class="donut-container">
+          <div class="donut" style="background:conic-gradient(#ff8800 0deg 130deg, #1890ff 130deg 220deg, #52c41a 220deg 280deg, #722ed1 280deg 320deg, #d9d9d9 320deg 360deg);"></div>
+          <div class="donut-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#ff8800;"></div>故障维修<span class="legend-value">48</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#1890ff;"></div>计划巡检<span class="legend-value">36</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#52c41a;"></div>预防维护<span class="legend-value">26</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#722ed1;"></div>设备更换<span class="legend-value">14</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#d9d9d9;"></div>其他<span class="legend-value">8</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:14px;font-weight:600;margin-bottom:12px;">工单明细</div>
+    <table class="data-table">
+      <thead><tr><th>工单编号</th><th>工单类型</th><th>关联故障</th><th>处理人</th><th>创建时间</th><th>完成时间</th><th>耗时</th><th>状态</th></tr></thead>
+      <tbody>
+        <tr><td>WO-2025-132</td><td><span class="tag tag-orange">故障维修</span></td><td>F2025-047</td><td>张伟</td><td>04-28 14:25</td><td>04-28 16:55</td><td>2.5h</td><td><span class="badge badge-green">已完成</span></td></tr>
+        <tr><td>WO-2025-131</td><td><span class="tag tag-blue">计划巡检</span></td><td>—</td><td>李明</td><td>04-27 08:00</td><td>04-27 12:30</td><td>4.5h</td><td><span class="badge badge-green">已完成</span></td></tr>
+        <tr><td>WO-2025-130</td><td><span class="tag tag-orange">故障维修</span></td><td>F2025-046</td><td>王强</td><td>04-25 09:18</td><td>04-25 10:30</td><td>1.2h</td><td><span class="badge badge-green">已完成</span></td></tr>
+        <tr><td>WO-2025-129</td><td><span class="tag tag-green">预防维护</span></td><td>—</td><td>赵磊</td><td>04-24 09:00</td><td>04-24 11:45</td><td>2.75h</td><td><span class="badge badge-green">已完成</span></td></tr>
+        <tr><td>WO-2025-128</td><td><span class="tag tag-orange">故障维修</span></td><td>F2025-045</td><td>张伟</td><td>04-22 16:40</td><td>04-22 20:40</td><td>4.0h</td><td><span class="badge badge-green">已完成</span></td></tr>
+        <tr><td>WO-2025-127</td><td><span class="tag tag-blue">计划巡检</span></td><td>—</td><td>李明</td><td>04-20 08:00</td><td>—</td><td>—</td><td><span class="badge badge-orange">处理中</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== SECTION 4: 设备运行情况 ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon green">⚙</div>
+    <h2>四、设备运行情况</h2>
+  </div>
+
+  <div class="card">
+    <div style="font-size:14px;font-weight:600;margin-bottom:16px;">各类设备运行状态</div>
+    <div class="device-grid">
+      <div class="device-card">
+        <div class="device-header">
+          <div><div class="device-name">逆变器</div><div class="device-type">Inverter</div></div>
+          <span class="badge badge-green">正常 97.8%</span>
+        </div>
+        <div class="device-stats">
+          <div class="device-stat"><span class="label">总数</span><span class="value">320 台</span></div>
+          <div class="device-stat"><span class="label">在线</span><span class="value" style="color:#52c41a;">313 台</span></div>
+          <div class="device-stat"><span class="label">告警</span><span class="value" style="color:#fa8c16;">5 台</span></div>
+          <div class="device-stat"><span class="label">离线</span><span class="value" style="color:#ff4d4f;">2 台</span></div>
+        </div>
+      </div>
+      <div class="device-card">
+        <div class="device-header">
+          <div><div class="device-name">光伏组件</div><div class="device-type">PV Module</div></div>
+          <span class="badge badge-green">正常 99.1%</span>
+        </div>
+        <div class="device-stats">
+          <div class="device-stat"><span class="label">总数</span><span class="value">780 组</span></div>
+          <div class="device-stat"><span class="label">在线</span><span class="value" style="color:#52c41a;">773 组</span></div>
+          <div class="device-stat"><span class="label">告警</span><span class="value" style="color:#fa8c16;">4 组</span></div>
+          <div class="device-stat"><span class="label">离线</span><span class="value" style="color:#ff4d4f;">3 组</span></div>
+        </div>
+      </div>
+      <div class="device-card">
+        <div class="device-header">
+          <div><div class="device-name">储能电池</div><div class="device-type">Energy Storage</div></div>
+          <span class="badge badge-green">正常 98.5%</span>
+        </div>
+        <div class="device-stats">
+          <div class="device-stat"><span class="label">总数</span><span class="value">132 套</span></div>
+          <div class="device-stat"><span class="label">在线</span><span class="value" style="color:#52c41a;">130 套</span></div>
+          <div class="device-stat"><span class="label">告警</span><span class="value" style="color:#fa8c16;">1 套</span></div>
+          <div class="device-stat"><span class="label">离线</span><span class="value" style="color:#ff4d4f;">1 套</span></div>
+        </div>
+      </div>
+      <div class="device-card">
+        <div class="device-header">
+          <div><div class="device-name">跟踪支架</div><div class="device-type">Tracker</div></div>
+          <span class="badge badge-green">正常 96.2%</span>
+        </div>
+        <div class="device-stats">
+          <div class="device-stat"><span class="label">总数</span><span class="value">156 台</span></div>
+          <div class="device-stat"><span class="label">在线</span><span class="value" style="color:#52c41a;">150 台</span></div>
+          <div class="device-stat"><span class="label">告警</span><span class="value" style="color:#fa8c16;">3 台</span></div>
+          <div class="device-stat"><span class="label">离线</span><span class="value" style="color:#ff4d4f;">3 台</span></div>
+        </div>
+      </div>
+      <div class="device-card">
+        <div class="device-header">
+          <div><div class="device-name">箱式变压器</div><div class="device-type">Box Transformer</div></div>
+          <span class="badge badge-green">正常 99.5%</span>
+        </div>
+        <div class="device-stats">
+          <div class="device-stat"><span class="label">总数</span><span class="value">40 台</span></div>
+          <div class="device-stat"><span class="label">在线</span><span class="value" style="color:#52c41a;">39 台</span></div>
+          <div class="device-stat"><span class="label">告警</span><span class="value" style="color:#fa8c16;">1 台</span></div>
+          <div class="device-stat"><span class="label">离线</span><span class="value" style="color:#ff4d4f;">0 台</span></div>
+        </div>
+      </div>
+      <div class="device-card">
+        <div class="device-header">
+          <div><div class="device-name">环境监测仪</div><div class="device-type">Weather Station</div></div>
+          <span class="badge badge-green">正常 100%</span>
+        </div>
+        <div class="device-stats">
+          <div class="device-stat"><span class="label">总数</span><span class="value">12 台</span></div>
+          <div class="device-stat"><span class="label">在线</span><span class="value" style="color:#52c41a;">12 台</span></div>
+          <div class="device-stat"><span class="label">告警</span><span class="value" style="color:#fa8c16;">0 台</span></div>
+          <div class="device-stat"><span class="label">离线</span><span class="value" style="color:#ff4d4f;">0 台</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:14px;font-weight:600;margin-bottom:12px;">设备运行时长排行 Top 5</div>
+    <div class="ranking-list">
+      <div class="ranking-item"><div class="rank top1">1</div><span class="name">逆变器 INV-012</span><div class="bar-bg"><div class="bar-fill" style="width:100%;"></div></div><span class="val">720h</span></div>
+      <div class="ranking-item"><div class="rank top2">2</div><span class="name">逆变器 INV-008</span><div class="bar-bg"><div class="bar-fill" style="width:98%;"></div></div><span class="val">706h</span></div>
+      <div class="ranking-item"><div class="rank top3">3</div><span class="name">储能电池 ESS-003</span><div class="bar-bg"><div class="bar-fill" style="width:96%;"></div></div><span class="val">692h</span></div>
+      <div class="ranking-item"><div class="rank normal">4</div><span class="name">逆变器 INV-021</span><div class="bar-bg"><div class="bar-fill" style="width:94%;"></div></div><span class="val">678h</span></div>
+      <div class="ranking-item"><div class="rank normal">5</div><span class="name">储能电池 ESS-007</span><div class="bar-bg"><div class="bar-fill" style="width:92%;"></div></div><span class="val">662h</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 5: 巡检维护记录 ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon cyan">🔍</div>
+    <h2>五、巡检维护记录</h2>
+  </div>
+
+  <div class="chart-area">
+    <div class="card">
+      <div style="font-size:14px;font-weight:600;margin-bottom:16px;">巡检完成情况</div>
+      <div class="summary-row">
+        <div class="summary-item"><div class="value" style="color:#52c41a;">28</div><div class="label">计划巡检</div></div>
+        <div class="summary-item"><div class="value" style="color:#1890ff;">26</div><div class="label">已完成</div></div>
+        <div class="summary-item"><div class="value" style="color:#ff4d4f;">2</div><div class="label">未完成</div></div>
+      </div>
+      <div class="kpi-row" style="margin-top:16px;">
+        <div class="kpi-item"><div class="kpi-header"><span class="kpi-label">巡检完成率</span><span class="kpi-value">92.9%</span></div><div class="progress-bar"><div class="fill green" style="width:92.9%;"></div></div></div>
+        <div class="kpi-item"><div class="kpi-header"><span class="kpi-label">发现隐患</span><span class="kpi-value">12 处</span></div><div class="progress-bar"><div class="fill orange" style="width:40%;"></div></div></div>
+        <div class="kpi-item"><div class="kpi-header"><span class="kpi-label">隐患整改率</span><span class="kpi-value">91.7%</span></div><div class="progress-bar"><div class="fill green" style="width:91.7%;"></div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:14px;font-weight:600;margin-bottom:16px;">维护工作统计</div>
+      <div class="metric-row"><span class="metric-label">预防性维护</span><span class="metric-value">18<span class="unit">次</span></span></div>
+      <div class="metric-row"><span class="metric-label">故障维修</span><span class="metric-value">35<span class="unit">次</span></span></div>
+      <div class="metric-row"><span class="metric-label">设备更换</span><span class="metric-value">14<span class="unit">台/套</span></span></div>
+      <div class="metric-row"><span class="metric-label">清洁保养</span><span class="metric-value">22<span class="unit">次</span></span></div>
+      <div class="metric-row"><span class="metric-label">软件升级</span><span class="metric-value">8<span class="unit">次</span></span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:14px;font-weight:600;margin-bottom:16px;">重要维护事件</div>
+    <div class="timeline">
+      <div class="timeline-item"><div class="dot orange"></div><div class="time">04-28 16:55</div><div class="content"><strong>逆变器 INV-089 维修完成</strong> — 更换IGBT模块，恢复正常运行</div></div>
+      <div class="timeline-item"><div class="dot blue"></div><div class="time">04-27 12:30</div><div class="content"><strong>季度巡检 #15 完成</strong> — 巡检A区光伏组件，发现3处热斑已标记</div></div>
+      <div class="timeline-item"><div class="dot orange"></div><div class="time">04-25 10:30</div><div class="content"><strong>数据采集器 DC-012 通讯恢复</strong> — 重新配置通讯参数，更换SIM卡</div></div>
+      <div class="timeline-item"><div class="dot green"></div><div class="time">04-22 09:00</div><div class="content"><strong>储能电池 ESS-005 预防性维护</strong> — 完成电池均衡测试，更换冷却风扇</div></div>
+      <div class="timeline-item"><div class="dot orange"></div><div class="time">04-15 15:30</div><div class="content"><strong>箱变 XB-003 故障抢修完成</strong> — 更换高压保险丝，恢复送电</div></div>
+      <div class="timeline-item"><div class="dot blue"></div><div class="time">04-10 08:00</div><div class="content"><strong>逆变器固件批量升级</strong> — 48台逆变器升级至V3.2.1</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 6: 备品备件管理 ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon purple">📦</div>
+    <h2>六、备品备件管理</h2>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div style="font-size:14px;font-weight:600;margin-bottom:16px;">本月备件消耗</div>
+      <table class="data-table">
+        <thead><tr><th>备件名称</th><th>规格型号</th><th>消耗数量</th><th>主要用途</th></tr></thead>
+        <tbody>
+          <tr><td>IGBT模块</td><td>FF450R12ME4</td><td>3</td><td>逆变器维修</td></tr>
+          <tr><td>保险丝</td><td>SIBA 20A</td><td>8</td><td>箱变/配电柜</td></tr>
+          <tr><td>通讯模块</td><td>4G DTU</td><td>2</td><td>数据采集器</td></tr>
+          <tr><td>冷却风扇</td><td>12V DC</td><td>5</td><td>储能电池维护</td></tr>
+          <tr><td>MC4接头</td><td>标准型</td><td>12</td><td>光伏组件接线</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div style="font-size:14px;font-weight:600;margin-bottom:16px;">库存预警</div>
+      <table class="data-table">
+        <thead><tr><th>备件名称</th><th>当前库存</th><th>安全库存</th><th>状态</th></tr></thead>
+        <tbody>
+          <tr><td>IGBT模块</td><td>2</td><td>5</td><td><span class="badge badge-red">低于安全线</span></td></tr>
+          <tr><td>通讯模块</td><td>4</td><td>5</td><td><span class="badge badge-orange">临界</span></td></tr>
+          <tr><td>保险丝</td><td>25</td><td>20</td><td><span class="badge badge-green">充足</span></td></tr>
+          <tr><td>冷却风扇</td><td>15</td><td>10</td><td><span class="badge badge-green">充足</span></td></tr>
+          <tr><td>MC4接头</td><td>30</td><td>20</td><td><span class="badge badge-green">充足</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 7: MTBF/MTTR ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon orange">📈</div>
+    <h2>七、设备可靠性分析（MTBF / MTTR）</h2>
+  </div>
+
+  <div class="card">
+    <table class="data-table">
+      <thead><tr><th>设备类型</th><th>数量</th><th>故障次数</th><th>总运行时长(h)</th><th>MTBF(h)</th><th>MTTR(h)</th><th>可用率</th></tr></thead>
+      <tbody>
+        <tr><td>逆变器</td><td>320</td><td>18</td><td>221,760</td><td>12,320</td><td>3.2</td><td>99.97%</td></tr>
+        <tr><td>光伏组件</td><td>780</td><td>8</td><td>540,480</td><td>67,560</td><td>2.1</td><td>99.99%</td></tr>
+        <tr><td>储能电池</td><td>132</td><td>5</td><td>89,760</td><td>17,952</td><td>4.5</td><td>99.97%</td></tr>
+        <tr><td>跟踪支架</td><td>156</td><td>12</td><td>107,640</td><td>8,970</td><td>3.8</td><td>99.96%</td></tr>
+        <tr><td>箱式变压器</td><td>40</td><td>2</td><td>28,800</td><td>14,400</td><td>6.8</td><td>99.95%</td></tr>
+        <tr><td>环境监测仪</td><td>12</td><td>2</td><td>8,640</td><td>4,320</td><td>1.5</td><td>99.98%</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;font-size:12px;color:#999;">MTBF = 总运行时长 / 故障次数 | MTTR = 总维修时长 / 故障次数</div>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="report-footer">
+  <div>星能SaaS · 智慧能源管理平台 — 运维月报</div>
+  <div style="margin-top:4px;">本报告由系统自动生成 · 数据截止日期：2025-04-30 23:59</div>
+</div>
+
+</div>
+</body>
+</html>
