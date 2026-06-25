@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>星能SaaS - 电价配置管理（省份版）</title>
+    <style>
+        :root {
+            --primary: #F08300;
+            --primary-hover: #D97400;
+            --primary-bg: #FFF5EB;
+            --text-primary: rgba(0,0,0,0.88);
+            --text-secondary: rgba(0,0,0,0.65);
+            --text-disabled: rgba(0,0,0,0.45);
+            --text-muted: #666666;
+            --border: #D9D9D9;
+            --border-light: #E9E9E9;
+            --link: #F08300;
+            --link-disabled: #D7D7D7;
+            --success: #52c41a;
+            --success-bg: #f6ffed;
+            --warning: #faad14;
+            --warning-bg: #fffbe6;
+            --error: #ff4d4f;
+            --error-bg: #fff2f0;
+            --bg-page: #FBFBFB;
+            --bg-white: #FFFFFF;
+            --table-header: #FAFAFA;
+            --table-row-hover: #FAFAFA;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --shadow: 0 1px 2px rgba(0,0,0,0.05);
+            --font: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font); background: var(--bg-page); color: var(--text-primary); font-size: 14px; }
+        .app { display: flex; min-height: 1080px; }
+        .sidebar { width: 185px; background: var(--bg-white); border-right: 1px solid var(--border-light); flex-shrink: 0; }
+        .sidebar-header { height: 56px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border-light); }
+        .sidebar-logo { font-size: 16px; font-weight: 600; color: var(--primary); }
+        .sidebar-nav { padding: 12px 0; }
+        .sidebar-item { display: flex; align-items: center; padding: 10px 20px; cursor: pointer; font-size: 14px; color: var(--text-primary); }
+        .sidebar-item:hover { background: #FAFAFA; }
+        .sidebar-item .icon { margin-right: 8px; width: 16px; text-align: center; }
+        .sidebar-item.active { background: var(--primary-bg); color: var(--primary); border-right: 3px solid var(--primary); }
+        .sidebar-sub-nav { padding: 4px 0 4px 28px; }
+        .sidebar-sub-item { padding: 8px 12px; cursor: pointer; font-size: 13px; color: var(--text-secondary); border-radius: var(--radius-sm); }
+        .sidebar-sub-item:hover { color: var(--primary); }
+        .sidebar-sub-item.active { color: var(--primary); background: var(--primary-bg); font-weight: 500; }
+        .main { flex: 1; display: flex; flex-direction: column; }
+        .top-bar { height: 56px; background: var(--bg-white); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
+        .top-bar-user { color: var(--text-secondary); font-size: 14px; }
+        .lang-switch { color: var(--text-secondary); font-size: 14px; cursor: pointer; }
+        .content { flex: 1; padding: 24px; }
+        .filter-card { background: var(--bg-white); border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: 16px 24px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+        .filter-group { display: flex; align-items: center; gap: 8px; }
+        .filter-label { color: var(--text-primary); font-size: 13px; white-space: nowrap; }
+        .filter-input { height: 32px; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0 12px; font-size: 14px; color: var(--text-primary); background: var(--bg-white); outline: none; min-width: 100px; }
+        .filter-input:focus, .filter-select:focus { border-color: var(--primary); }
+        .filter-select { height: 32px; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0 12px; font-size: 14px; color: var(--text-primary); background: var(--bg-white); outline: none; min-width: 100px; cursor: pointer; }
+        .btn { height: 32px; padding: 0 16px; border-radius: var(--radius-md); font-size: 14px; cursor: pointer; border: none; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-default { background: var(--bg-white); color: var(--text-primary); border: 1px solid var(--border); }
+        .btn-default:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-outline { background: var(--bg-white); color: var(--primary); border: 1px solid var(--primary); }
+        .btn-outline:hover { background: #FFF5EB; }
+        .btn-publish { background: var(--primary); color: #fff; height: 32px; padding: 0 20px; border-radius: var(--radius-md); font-size: 14px; border: none; cursor: pointer; }
+        .btn-publish:hover { background: var(--primary-hover); }
+        .batch-select-all { display: flex; align-items: center; gap: 8px; }
+        .table-card { background: var(--bg-white); border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { background: var(--table-header); padding: 14px 16px; text-align: left; font-size: 14px; font-weight: 400; color: var(--text-muted); border-bottom: 1px solid var(--border-light); }
+        .data-table td { padding: 14px 16px; border-bottom: 1px solid var(--border-light); font-size: 14px; color: var(--text-primary); vertical-align: top; }
+        .data-table tbody tr:hover { background: var(--table-row-hover); }
+        .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; }
+        .badge-published { background: var(--success-bg); color: var(--success); }
+        .badge-pending { background: var(--warning-bg); color: var(--warning); }
+        .action-link { color: var(--link); cursor: pointer; margin-right: 4px; }
+        .action-link:hover { text-decoration: underline; }
+        .action-link.disabled { color: var(--link-disabled); cursor: not-allowed; }
+        .action-sep { color: var(--border); margin: 0 2px; }
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .section-title { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+        .month-expired { color: var(--text-disabled); font-style: italic; }
+        .history-layout { display: flex; gap: 20px; min-height: 400px; }
+        .history-timeline { width: 260px; flex-shrink: 0; border-right: 1px solid var(--border-light); padding-right: 16px; max-height: 450px; overflow-y: auto; }
+        .history-item { padding: 12px; border-radius: var(--radius-md); cursor: pointer; margin-bottom: 4px; border: 1px solid var(--border-light); }
+        .history-item:hover { border-color: var(--primary); }
+        .history-item.active { border-color: var(--primary); background: var(--primary-bg); }
+        .history-item-time { font-size: 11px; color: var(--text-secondary); }
+        .history-item-op { font-size: 13px; color: var(--text-primary); margin-top: 4px; font-weight: 500; }
+        .history-item-user { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+        .history-detail { flex: 1; overflow-x: auto; }
+        .history-detail-title { font-size: 15px; font-weight: 500; color: var(--primary); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-light); }
+        .history-detail-table { width: 100%; border-collapse: collapse; }
+        .history-detail-table th { background: var(--table-header); padding: 10px 12px; text-align: left; font-size: 13px; font-weight: 500; color: var(--text-muted); }
+        .history-detail-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-light); font-size: 13px; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .modal { background: var(--bg-white); border-radius: var(--radius-lg); width: 900px; max-height: 88vh; overflow-y: auto; }
+        .modal-sm { width: 560px; }
+        .modal-md { width: 720px; }
+        .modal-lg { background: var(--bg-white); width: 1100px; }
+        .modal-xl { background: var(--bg-white); width: 1300px; }
+        .modal-drawer { background: var(--bg-white); width: 1200px; max-height: 92vh; border-radius: var(--radius-lg); display: flex; flex-direction: column; }
+        .modal-drawer .modal-body { flex: 1; overflow-y: auto; padding: 24px; }
+        .modal-drawer .modal-footer { border-top: 1px solid var(--border-light); padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px; background: var(--bg-white); border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+        .modal-header { padding: 16px 24px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { font-size: 16px; font-weight: 500; color: var(--text-primary); }
+        .modal-close { cursor: pointer; font-size: 22px; color: var(--text-secondary); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+        .modal-close:hover { background: #f5f5f5; }
+        .modal-body { padding: 24px; }
+        .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 8px; }
+        .upload-steps { display: flex; margin-bottom: 24px; padding: 0 20px; }
+        .step-item { flex: 1; text-align: center; position: relative; }
+        .step-line { position: absolute; top: 16px; left: 0; right: 0; height: 2px; background: var(--border-light); z-index: 0; }
+        .step-item:first-child .step-line { left: 50%; }
+        .step-item:last-child .step-line { right: 50%; }
+        .step-item.completed .step-line { background: var(--primary); }
+        .step-circle { width: 32px; height: 32px; border-radius: 50%; background: var(--border-light); color: var(--text-secondary); line-height: 32px; margin: 0 auto 8px; position: relative; z-index: 1; font-size: 14px; }
+        .step-item.active .step-circle, .step-item.completed .step-circle { background: var(--primary); color: #fff; }
+        .step-label { font-size: 12px; color: var(--text-secondary); }
+        .step-item.active .step-label, .step-item.completed .step-label { color: var(--primary); }
+        .template-card { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #FFF9F0; border-radius: var(--radius-md); margin-bottom: 20px; }
+        .template-icon { width: 36px; height: 36px; background: var(--primary); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; flex-shrink: 0; }
+        .template-info { flex: 1; }
+        .template-name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+        .template-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+        .upload-zone { border: 2px dashed var(--border); border-radius: var(--radius-md); padding: 40px; text-align: center; cursor: pointer; }
+        .upload-zone:hover { border-color: var(--primary); background: #FFFBF5; }
+        .upload-icon { font-size: 40px; color: var(--border); margin-bottom: 8px; }
+        .upload-text { color: var(--text-primary); margin-bottom: 4px; }
+        .upload-hint { font-size: 12px; color: var(--text-secondary); }
+        .form-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+        .form-label { font-size: 13px; color: var(--text-primary); width: 90px; text-align: right; flex-shrink: 0; }
+        .form-input { height: 32px; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0 12px; font-size: 14px; color: var(--text-primary); outline: none; flex: 1; }
+        .form-input:focus { border-color: var(--primary); }
+        .form-select { height: 32px; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0 12px; font-size: 14px; color: var(--text-primary); background: var(--bg-white); outline: none; cursor: pointer; }
+        .dim-fields { background: var(--bg-white); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 16px; }
+        .history-info-bar { background: var(--bg-white); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 12px 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+        .history-info-item { display: flex; align-items: center; gap: 6px; }
+        .history-info-label { font-size: 13px; color: var(--text-secondary); }
+        .history-info-value { font-size: 14px; color: var(--text-primary); font-weight: 500; }
+        .detail-card { background: var(--bg-white); border-radius: var(--radius-lg); box-shadow: var(--shadow); margin-bottom: 16px; overflow: hidden; }
+        .detail-card-header { padding: 12px 24px; border-bottom: 1px solid var(--border-light); font-size: 15px; font-weight: 500; color: var(--primary); display: flex; align-items: center; justify-content: space-between; }
+        .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 20px 24px; }
+        .price-card { border-radius: var(--radius-md); padding: 16px; }
+        .price-card.grid { background: #FFF9F0; border: 1px solid #FFE4B5; }
+        .price-card.to-user { background: #F0F7FF; border: 1px solid #B3D9FF; }
+        .price-card.star { background: #F6FFED; border: 1px solid #B7EB8F; }
+        .price-card-title { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 12px; }
+        .price-card-unit { font-size: 12px; color: var(--text-secondary); font-weight: normal; }
+        .price-inputs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        .price-input-item { text-align: center; }
+        .price-input-item label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+        .price-input-item input { width: 100%; height: 32px; border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center; font-size: 14px; color: var(--text-primary); outline: none; }
+        .price-input-item input:focus { border-color: var(--primary); }
+        .time-section { padding: 20px 24px; }
+        .time-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .time-select { height: 32px; width: 90px; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0 8px; font-size: 13px; color: var(--text-primary); background: var(--bg-white); outline: none; cursor: pointer; }
+        .time-input { height: 32px; width: 80px; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0 8px; font-size: 13px; color: var(--text-primary); text-align: center; outline: none; }
+.time-input[type="time"] { width: 100px; cursor: pointer; }
+.time-input[type="time"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.6; }
+        .time-sep { color: var(--text-secondary); font-size: 13px; }
+        .time-remove { cursor: pointer; color: var(--text-disabled); font-size: 16px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+        .time-remove:hover { color: var(--error); background: #fff2f0; }
+        .time-add { display: flex; align-items: center; justify-content: center; gap: 4px; width: 100%; height: 36px; border: 1px dashed var(--border); border-radius: var(--radius-md); background: #FAFAFA; cursor: pointer; color: var(--text-secondary); font-size: 13px; margin-top: 8px; }
+        .time-add:hover { border-color: var(--primary); color: var(--primary); }
+        .preview-table { max-height: 280px; overflow-y: auto; border: 1px solid var(--border-light); border-radius: var(--radius-sm); }
+        .preview-table table { width: 100%; font-size: 12px; border-collapse: collapse; }
+        .preview-table th { background: var(--table-header); padding: 8px; text-align: left; font-weight: 500; position: sticky; top: 0; }
+        .preview-table td { padding: 8px; border-bottom: 1px solid var(--border-light); }
+        .page-view { display: none; }
+        .page-view.active { display: block; }
+        .demo-nav { position: fixed; bottom: 16px; right: 16px; z-index: 999; display: flex; gap: 8px; }
+        .demo-nav .btn { box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .demo-btn { height: 28px; padding: 0 12px; font-size: 12px; border-radius: var(--radius-sm); background: var(--bg-white); border: 1px solid var(--border); color: var(--text-primary); cursor: pointer; }
+        .demo-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .v-badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; white-space:nowrap; }
+        .v-pending { background:#f5f5f5; color:#999; }
+        .v-pass { background:var(--success-bg); color:var(--success); }
+        .v-fail { background:var(--error-bg); color:var(--error); }
+        .v-row-pass { background:#f6ffed !important; }
+        .v-row-fail { background:#fff2f0 !important; }
+        .v-row-pass td { border-bottom-color:#b7eb8f !important; }
+        .v-row-fail td { border-bottom-color:#ffccc7 !important; }
+        .v-pass-bar { background:#f6ffed; border:1px solid #b7eb8f; }
+        .v-partial-bar { background:#fffbe6; border:1px solid #ffe58f; }
+        .v-fail-bar { background:#fff2f0; border:1px solid #ffccc7; }
+        .v-error-item { padding:8px 12px; border-radius:var(--radius-sm); margin-bottom:4px; font-size:13px; background:#fff2f0; border:1px solid #ffccc7; }
+        .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+        .grid-6 .form-group label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+        .grid-6 .form-group input { width: 100%; height: 32px; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0 10px; font-size: 13px; color: var(--text-primary); }
+        .grid-6 .form-group input[disabled] { background: #FAFAFA; color: var(--text-secondary); }
+        .dim-title { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 12px; }
+        .section-title { font-size: 15px; font-weight: 500; color: var(--primary); margin-bottom: 12px; }
+        .price-section { margin-bottom: 16px; }
+        .price-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .sub-table { width: 100%; border: 1px solid var(--border-light); border-radius: var(--radius-md); margin: 8px 0; }
+        .sub-table th { background: var(--table-header); padding: 8px 12px; text-align: left; font-size: 12px; font-weight: 500; color: var(--text-muted); border-bottom: 1px solid var(--border-light); }
+        .sub-table td { padding: 8px 12px; border-bottom: 1px solid var(--border-light); font-size: 13px; color: var(--text-primary); }
+        .sub-table tr:last-child td { border-bottom: none; }
+        .sub-table tr:hover { background: var(--table-row-hover); }
+    
+.time-groups { display: flex; flex-direction: column; gap: 12px; }
+.time-group { border: 1px solid var(--border-light); border-radius: var(--radius-md); background: var(--bg-white); }
+.time-group-header { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: #FAFAFA; border-bottom: 1px solid var(--border-light); border-radius: var(--radius-md) var(--radius-md) 0 0; flex-wrap: wrap; }
+.time-group-name { font-size: 14px; font-weight: 500; color: var(--primary); min-width: 44px; }
+.time-group-scope-label { font-size: 12px; color: var(--text-secondary); margin-left: 8px; }
+.time-group-scope-item { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; color: var(--text-secondary); cursor: pointer; padding: 2px 6px; border-radius: 4px; }
+.time-group-scope-item:hover { background: var(--primary-bg); }
+.time-group-scope-item input { cursor: pointer; }
+.time-group-scope-item input:disabled { cursor: not-allowed; opacity: 0.4; }
+.time-group-body { padding: 12px 16px; }
+.time-group-remove { font-size: 12px; color: var(--error); cursor: pointer; margin-left: auto; padding: 2px 8px; border-radius: 4px; }
+.time-group-remove:hover { background: var(--error-bg); }
+</style>
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar">
+        <div class="sidebar-header"><span class="sidebar-logo">&#9889; 星能SaaS</span></div>
+        <nav class="sidebar-nav">
+            <div class="sidebar-item active"><span class="icon"></span>研发配置</div>
+            <div class="sidebar-sub-nav">
+                <div class="sidebar-sub-item active">电价时段发布</div>
+            </div>
+        </nav>
+    </aside>
+    <div class="main">
+        <header class="top-bar">
+            <div class="top-bar-user">运营端：孙香</div>
+            <div><span class="lang-switch">简体中文</span></div>
+        </header>
+        <div class="content">
+            <!-- ===== LIST PAGE ===== -->
+            <div id="page-list" class="page-view active">
+                <!-- Filters: 省份 + 状态 + 月份 -->
+                <div class="filter-card">
+                    <div class="filter-group">
+                        <span class="filter-label">省份：</span>
+                        <select class="filter-select" style="width:120px;">
+                            <option>全部</option><option>浙江</option><option>上海</option><option>江苏</option>
+                            <option>广东</option><option>北京</option><option>四川</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">状态：</span>
+                        <select class="filter-select" style="width:110px;">
+                            <option>全部</option><option>已发布</option><option>待发布</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">月份：</span>
+                        <input type="month" class="filter-input" style="width:140px;" value="2026-06">
+                    </div>
+                    <div class="filter-group">
+                        <button class="btn btn-primary">查 询</button>
+                        <button class="btn btn-default">重 置</button>
+                    </div>
+                </div>
+                <!-- Title + Action buttons row -->
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                    <div style="font-size:16px;font-weight:600;color:var(--text-primary);">电价时段列表</div>
+                    <div style="display:flex;gap:8px;">
+                    <button class="btn btn-primary" onclick="showCreateModal()">新增电价时段</button>
+                    <button class="btn btn-primary" onclick="showUploadModal()">批量上传</button>
+                    <button class="btn btn-primary" onclick="showModal('batchModal')">批量发布</button>
+                    </div>
+                </div>
+                <!-- Table: 省份聚合（简化版 - 仅展示省份级别） -->
+                <div class="table-card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width:120px;">省份</th>
+                                <th style="width:100px;">月份</th>
+                                <th style="width:100px;">状态</th>
+                                <th style="width:170px;">创建时间</th>
+                                <th style="width:170px;">发布时间</th>
+                                <th style="width:200px;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 已发布 -->
+                            <tr>
+                                <td>浙江</td>
+                                <td>2026-06</td>
+                                <td><span class="badge badge-published">已发布</span></td>
+                                <td>2026-06-01 09:56:04</td>
+                                <td>2026-06-01 09:56:05</td>
+                                <td>
+                                    <span class="action-link" onclick="showModal('modal-detail')">编辑</span><span class="action-sep">|</span>
+                                    <span class="action-link disabled">发布</span><span class="action-sep">|</span>
+                                    <span class="action-link" onclick="showHistoryModal()">历史记录</span>
+                                </td>
+                            </tr>
+                            <!-- 待发布 -->
+                            <tr>
+                                <td>上海</td>
+                                <td>2026-06</td>
+                                <td><span class="badge badge-pending">待发布</span></td>
+                                <td>2026-06-02 14:20:00</td>
+                                <td>--</td>
+                                <td>
+                                    <span class="action-link" onclick="showModal('modal-detail')">编辑</span><span class="action-sep">|</span>
+                                    <span class="action-link" onclick="publishRow(this)">发布</span><span class="action-sep">|</span>
+                                    <span class="action-link" onclick="showHistoryModal()">历史记录</span>
+                                </td>
+                            </tr>
+                            <!-- 待发布-次月 -->
+                            <tr>
+                                <td>广东</td>
+                                <td>2026-07</td>
+                                <td><span class="badge badge-pending">待发布</span></td>
+                                <td>2026-06-02 15:30:00</td>
+                                <td>--</td>
+                                <td>
+                                    <span class="action-link" onclick="showModal('modal-detail')">编辑</span><span class="action-sep">|</span>
+                                    <span class="action-link" onclick="publishRow(this)">发布</span><span class="action-sep">|</span>
+                                    <span class="action-link" onclick="showHistoryModal()">历史记录</span>
+                                </td>
+                            </tr>
+                            <!-- 待发布-历史月 -->
+                            <tr>
+                                <td>江苏</td>
+                                <td>2026-05</td>
+                                <td><span class="badge badge-pending">待发布</span></td>
+                                <td>2026-05-20 10:08:07</td>
+                                <td>--</td>
+                                <td>
+                                    <span class="action-link" onclick="showModal('modal-detail')">编辑</span><span class="action-sep">|</span>
+                                    <span class="action-link" onclick="publishRow(this)">发布</span><span class="action-sep">|</span>
+                                    <span class="action-link" onclick="showHistoryModal()">历史记录</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- ===== CREATE MODAL ===== -->
+            <div id="createModal" class="modal-overlay" style="display:none;">
+                <div class="modal-lg" style="max-height:90vh;overflow-y:auto;">
+                    <div class="modal-header">
+                        <h3>新增电价时段</h3>
+                        <span class="modal-close" onclick="hideCreateModal()">&times;</span>
+                    </div>
+                    <div class="modal-body" style="overflow-y:auto;">
+                        <div class="dim-fields">
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px 20px;">
+                                <div class="form-row" style="margin-bottom:0;">
+                                    <span class="form-label">省份：</span>
+                                    <select id="createProvince" class="form-select" style="width:100%;">
+                                        <option value="">请选择省份</option>
+                                        <option value="浙江">浙江</option><option value="上海">上海</option><option value="江苏">江苏</option>
+                                        <option value="广东">广东</option><option value="北京">北京</option><option value="四川">四川</option>
+                                    </select>
+                                </div>
+                                <div class="form-row" style="margin-bottom:0;">
+                                    <span class="form-label">月份：</span>
+                                    <input id="createMonth" type="month" class="form-input" value="2026-07" style="width:100%;" onchange="updateAvailableProvinces()">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Price Input -->
+                        <div class="detail-card" style="box-shadow:none; border:1px solid var(--border-light);">
+                            <div class="detail-card-header">电价信息（元/kWh）</div>
+                            <div style="overflow-x:auto;padding:0 24px 20px;">
+                                <table style="width:100%;min-width:1400px;border-collapse:collapse;font-size:13px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="padding:12px 16px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;" rowspan="2">用电性质</th>
+                                            <th style="padding:12px 16px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;" rowspan="2">电压等级</th>
+                                            <th style="padding:12px 16px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);border-right:1px solid var(--border-light);min-width:140px;" rowspan="2">电网代理购电价</th>
+                                            <th colspan="5" style="padding:10px 16px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);font-weight:500;color:var(--text-primary);border-right:1px solid var(--border-light);">电网代理到户电价</th>
+                                            <th colspan="5" style="padding:10px 16px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);font-weight:500;color:var(--text-primary);">星星代理预估电价</th>
+                                        </tr>
+                                        <tr>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">尖段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">峰段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">平段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">谷段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">深谷</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">尖段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">峰段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">平段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">谷段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);min-width:100px;">深谷</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- 单一制 -->
+                                        <tr>
+                                            <td rowspan="3" style="padding:0;text-align:center;vertical-align:middle;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);font-weight:500;">单一制</td>
+                                            <td style="padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">不满1千伏</td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">1-10千伏</td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">35千伏</td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                        </tr>
+                                        <!-- 两部制 -->
+                                        <tr>
+                                            <td rowspan="4" style="padding:0;text-align:center;vertical-align:middle;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);font-weight:500;">两部制</td>
+                                            <td style="padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">1-10千伏</td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">35千伏</td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">110千伏</td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">220千伏及以上</td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Time Config -->
+                        <div class="detail-card" style="box-shadow:none; border:1px solid var(--border-light); margin-top:16px;">
+                            <div class="detail-card-header">
+                                <span>时段配置</span>
+                                <button class="btn btn-default" onclick="addTimeGroup('create-time-groups')" style="height:28px;padding:0 12px;font-size:13px;">+ 添加时段事件</button>
+                            </div>
+                            <div style="padding:16px 24px;">
+                                <div id="create-time-groups" class="time-groups">
+                                    <div class="time-group">
+                                        <div class="time-group-header">
+                                            <span class="time-group-name">时段事件1</span>
+                                            <span class="time-group-scope-label">适用范围：</span>
+                                            <label class="time-group-scope-item"><input type="checkbox" value="单一制-不满1千伏" checked onchange="syncTimeGroupScopes(this)"> 单一制-不满1千伏</label>
+                                            <label class="time-group-scope-item"><input type="checkbox" value="单一制-1-10千伏" checked onchange="syncTimeGroupScopes(this)"> 单一制-1-10千伏</label>
+                                            <label class="time-group-scope-item"><input type="checkbox" value="单一制-35千伏" checked onchange="syncTimeGroupScopes(this)"> 单一制-35千伏</label>
+                                            <label class="time-group-scope-item"><input type="checkbox" value="两部制-1-10千伏" checked onchange="syncTimeGroupScopes(this)"> 两部制-1-10千伏</label>
+                                            <label class="time-group-scope-item"><input type="checkbox" value="两部制-35千伏" checked onchange="syncTimeGroupScopes(this)"> 两部制-35千伏</label>
+                                            <label class="time-group-scope-item"><input type="checkbox" value="两部制-110千伏" checked onchange="syncTimeGroupScopes(this)"> 两部制-110千伏</label>
+                                            <label class="time-group-scope-item"><input type="checkbox" value="两部制-220千伏及以上" checked onchange="syncTimeGroupScopes(this)"> 两部制-220千伏及以上</label>
+                                            <span class="time-group-remove" onclick="removeTimeGroup(this)" style="display:none;">删除</span>
+                                        </div>
+                                        <div class="time-group-body">
+                                            <div class="time-add" onclick="addTimeRow(this)">+ 添加时间段</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" onclick="hideCreateModal()">取消</button>
+                        <button class="btn btn-publish">保存并发布</button>
+                    </div>
+                </div>
+            </div>
+            <!-- ===== UPLOAD MODAL ===== -->
+            <div id="uploadModal" class="modal-overlay" style="display:none;">
+                <div class="modal-lg" style="background:var(--bg-white);border-radius:var(--radius-lg);overflow:hidden;">
+                    <div class="modal-header">
+                        <h3>批量上传</h3>
+                        <span class="modal-close" onclick="hideUploadModal()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div id="uploadStep1" class="upload-step-content">
+                            <div class="upload-steps">
+                                <div class="step-item active"><div class="step-line"></div><div class="step-circle">1</div><div class="step-label">选择时间</div></div>
+                                <div class="step-item"><div class="step-line"></div><div class="step-circle">2</div><div class="step-label">下载模板</div></div>
+                                <div class="step-item"><div class="step-line"></div><div class="step-circle">3</div><div class="step-label">上传文件</div></div>
+                                <div class="step-item"><div class="step-line"></div><div class="step-circle">4</div><div class="step-label">预览确认</div></div>
+                                <div class="step-item"><div class="step-circle">5</div><div class="step-label">完成</div></div>
+                            </div>
+                            <div style="padding:0 20px;">
+                                <div style="margin-bottom:20px;">
+                                    <label style="display:block;font-size:13px;color:var(--text-primary);margin-bottom:8px;font-weight:500;">上传月份</label>
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <input type="month" class="filter-input" value="2026-07" style="width:150px;">
+                                        <span style="color:var(--text-secondary);">至</span>
+                                        <input type="month" class="filter-input" value="2026-07" style="width:150px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="uploadStep2" class="upload-step-content" style="display:none;">
+                            <div class="upload-steps">
+                                <div class="step-item completed"><div class="step-line"></div><div class="step-circle">&#10003;</div><div class="step-label">选择时间</div></div>
+                                <div class="step-item active"><div class="step-line"></div><div class="step-circle">2</div><div class="step-label">下载模板</div></div>
+                                <div class="step-item"><div class="step-line"></div><div class="step-circle">3</div><div class="step-label">上传文件</div></div>
+                                <div class="step-item"><div class="step-line"></div><div class="step-circle">4</div><div class="step-label">预览确认</div></div>
+                                <div class="step-item"><div class="step-circle">5</div><div class="step-label">完成</div></div>
+                            </div>
+                            <div style="padding:0 20px;">
+                                <div class="template-card">
+                                    <div class="template-icon">&#128196;</div>
+                                    <div class="template-info">
+                                        <div class="template-name">电价时段上传模板.xlsx</div>
+                                        <div class="template-desc">单Sheet（69列：维度6列+电价15列+时段48列），预填3388行</div>
+                                    </div>
+                                    <button class="btn btn-outline">下载模板</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="uploadStep3" class="upload-step-content" style="display:none;">
+                            <div class="upload-steps">
+                                <div class="step-item completed"><div class="step-line"></div><div class="step-circle">&#10003;</div><div class="step-label">选择时间</div></div>
+                                <div class="step-item completed"><div class="step-line"></div><div class="step-circle">&#10003;</div><div class="step-label">下载模板</div></div>
+                                <div class="step-item active"><div class="step-line"></div><div class="step-circle">3</div><div class="step-label">上传文件</div></div>
+                                <div class="step-item"><div class="step-line"></div><div class="step-circle">4</div><div class="step-label">预览确认</div></div>
+                                <div class="step-item"><div class="step-circle">5</div><div class="step-label">完成</div></div>
+                            </div>
+                            <div style="padding:0 20px;">
+                                <div class="upload-zone">
+                                    <div class="upload-icon">&#128230;</div>
+                                    <div class="upload-text">点击或拖拽文件到此处上传</div>
+                                    <div class="upload-hint">支持 .xlsx 格式，文件大小不超过 10MB</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="uploadStep4" class="upload-step-content" style="display:none;">
+                            <div class="upload-steps">
+                                <div class="step-item completed"><div class="step-line"></div><div class="step-circle">&#10003;</div><div class="step-label">选择时间</div></div>
+                                <div class="step-item completed"><div class="step-line"></div><div class="step-circle">&#10003;</div><div class="step-label">下载模板</div></div>
+                                <div class="step-item completed"><div class="step-line"></div><div class="step-circle">&#10003;</div><div class="step-label">上传文件</div></div>
+                                <div class="step-item active" id="step4Indicator"><div class="step-line"></div><div class="step-circle">4</div><div class="step-label">预览确认</div></div>
+                                <div class="step-item" id="step5Indicator"><div class="step-circle">5</div><div class="step-label">完成</div></div>
+                            </div>
+                            <div style="padding:0 20px;">
+                                <div style="margin-bottom:12px;font-size:13px;font-weight:500;color:var(--text-primary);">上传文件：电价时段上传模板.xlsx</div>
+                                <div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">共上传 2 个省份，共 4 条用电性质组合记录</div>
+                                <!-- 校验结果摘要 -->
+                                <div id="validationSummary" style="display:none;margin-bottom:16px;padding:12px 16px;border-radius:var(--radius-md);font-size:13px;"></div>
+                                <!-- 预览表格（记录展开 + 省份级校验） -->
+                                <div class="preview-table" style="max-height:240px;overflow-y:auto;border:1px solid var(--border-light);border-radius:var(--radius-md);margin-bottom:12px;">
+                                    <table id="previewTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:60px;">省份</th>
+                                                <th style="width:72px;">月份</th>
+                                                <th style="width:82px;">用电性质</th>
+                                                <th style="width:92px;">电压等级</th>
+                                                <th style="width:62px;">尖段</th>
+                                                <th style="width:62px;">峰段</th>
+                                                <th style="width:62px;">平段</th>
+                                                <th style="width:62px;">谷段</th>
+                                                <th style="width:62px;">深谷</th>
+                                                <th style="width:64px;">校验</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="previewBody">
+                                            <!-- 浙江：2条记录，校验badge rowspan=2 -->
+                                            <tr class="prow" data-pid="zj" data-province="浙江" data-records='[{"usage":"单一制","voltage":"不满1千伏","jd":"1.0444","fd":"0.6720","pd":"0.3611","gd":"0.3218","sgd":"--"},{"usage":"两部制","voltage":"1-10千伏","jd":"0.9772","fd":"0.6334","pd":"0.3463","gd":"0.3108","sgd":"0.2878"}]'>
+                                                <td rowspan="2">浙江</td>
+                                                <td rowspan="2">2026-07</td>
+                                                <td>单一制</td>
+                                                <td>不满1千伏</td>
+                                                <td>1.0444</td>
+                                                <td>0.6720</td>
+                                                <td>0.3611</td>
+                                                <td>0.3218</td>
+                                                <td>--</td>
+                                                <td rowspan="2"><span class="v-badge v-pending">待校验</span></td>
+                                            </tr>
+                                            <tr class="prow-rec" data-pid="zj">
+                                                <td>两部制</td>
+                                                <td>1-10千伏</td>
+                                                <td>0.9772</td>
+                                                <td>0.6334</td>
+                                                <td>0.3463</td>
+                                                <td>0.3108</td>
+                                                <td>0.2878</td>
+                                            </tr>
+                                            <!-- 上海：2条记录，校验badge rowspan=2 -->
+                                            <tr class="prow" data-pid="sh" data-province="上海" data-records='[{"usage":"单一制","voltage":"不满1千伏","jd":"0.8000","fd":"0.9000","pd":"0.5000","gd":"0.3000","sgd":"0.2000"},{"usage":"两部制","voltage":"35千伏","jd":"0.9332","fd":"0.6081","pd":"0.3367","gd":"0.2500","sgd":"0.2000"}]'>
+                                                <td rowspan="2">上海</td>
+                                                <td rowspan="2">2026-07</td>
+                                                <td>单一制</td>
+                                                <td>不满1千伏</td>
+                                                <td>0.8000</td>
+                                                <td>0.9000</td>
+                                                <td>0.5000</td>
+                                                <td>0.3000</td>
+                                                <td>0.2000</td>
+                                                <td rowspan="2"><span class="v-badge v-pending">待校验</span></td>
+                                            </tr>
+                                            <tr class="prow-rec" data-pid="sh">
+                                                <td>两部制</td>
+                                                <td>35千伏</td>
+                                                <td>0.9332</td>
+                                                <td>0.6081</td>
+                                                <td>0.3367</td>
+                                                <td>0.2500</td>
+                                                <td>0.2000</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- 校验详情 -->
+                                <div id="validationDetails" style="display:none;margin-bottom:12px;">
+                                    <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:8px;">校验详情：</div>
+                                    <div id="validationDetailList" style="max-height:180px;overflow-y:auto;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="uploadStep5" class="upload-step-content" style="display:none;">
+                            <div class="upload-steps">
+                                <div class="step-item completed"><div class="step-line"></div><div class="step-circle">&#10003;</div><div class="step-label">选择时间</div></div>
+                                <div class="step-item completed"><div class="step-line"></div><div class="step-circle">&#10003;</div><div class="step-label">下载模板</div></div>
+                                <div class="step-item completed"><div class="step-line"></div><div class="step-circle">&#10003;</div><div class="step-label">上传文件</div></div>
+                                <div class="step-item completed"><div class="step-line"></div><div class="step-circle">&#10003;</div><div class="step-label">预览确认</div></div>
+                                <div class="step-item active"><div class="step-circle">5</div><div class="step-label">完成</div></div>
+                            </div>
+                            <div id="uploadResult" style="padding:0 20px;text-align:center;padding-top:30px;padding-bottom:30px;"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="uploadPrevBtn" class="btn btn-default" onclick="prevUploadStep()">上一步</button>
+                        <button id="uploadNextBtn" class="btn btn-primary" onclick="nextUploadStep()">下一步</button>
+                    </div>
+                </div>
+            </div>
+            <!-- ===== HISTORY MODAL ===== -->
+            <div id="historyModal" class="modal-overlay" style="display:none;">
+                <div class="modal-lg" style="max-height:90vh;overflow-y:auto;">
+                    <div class="modal-header">
+                        <h3>操作历史记录</h3>
+                        <span class="modal-close" onclick="hideHistoryModal()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="history-info-bar">
+                            <div class="history-info-item"><span class="history-info-label">省份：</span><span class="history-info-value">浙江</span></div>
+                            <div class="history-info-item"><span class="history-info-label">月份：</span><span class="history-info-value">2026-06</span></div>
+                        </div>
+                        <div class="history-layout">
+                            <div class="history-timeline">
+                                <div class="history-item active">
+                                    <div class="history-item-time">2026-06-01 09:56:05</div>
+                                    <div class="history-item-op">发布</div>
+                                    <div class="history-item-user">操作人：13706198491</div>
+                                </div>
+                                <div class="history-item">
+                                    <div class="history-item-time">2026-06-01 09:50:12</div>
+                                    <div class="history-item-op">编辑</div>
+                                    <div class="history-item-user">操作人：13706198491</div>
+                                </div>
+                                <div class="history-item">
+                                    <div class="history-item-time">2026-06-01 09:45:30</div>
+                                    <div class="history-item-op">新增</div>
+                                    <div class="history-item-user">操作人：13706198491</div>
+                                </div>
+                                <div class="history-item">
+                                    <div class="history-item-time">2026-05-28 11:53:38</div>
+                                    <div class="history-item-op">发布</div>
+                                    <div class="history-item-user">操作人：13706198491</div>
+                                </div>
+                            </div>
+                            <div class="history-detail">
+                                <div class="history-detail-title">发布</div>
+                                <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">发布后电价详情：</div>
+                                <!-- 价格信息表格 -->
+                                <div style="overflow-x:auto;margin-bottom:16px;border:1px solid var(--border-light);border-radius:var(--radius-md);">
+                                    <table style="width:100%;min-width:1400px;border-collapse:collapse;font-size:12px;">
+                                        <thead>
+                                            <tr>
+                                                <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);border-right:1px solid var(--border-light);" rowspan="2">用电性质</th>
+                                                <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);border-right:1px solid var(--border-light);" rowspan="2">电压等级</th>
+                                                <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);border-right:1px solid var(--border-light);" rowspan="2">电网代理购电价</th>
+                                                <th colspan="5" style="padding:6px 12px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);font-weight:500;color:var(--text-primary);border-right:1px solid var(--border-light);">电网代理到户电价</th>
+                                                <th colspan="5" style="padding:6px 12px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);font-weight:500;color:var(--text-primary);">星星代理预估电价</th>
+                                            </tr>
+                                            <tr>
+                                                <th style="padding:6px 8px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);">尖段</th>
+                                                <th style="padding:6px 8px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);">峰段</th>
+                                                <th style="padding:6px 8px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);">平段</th>
+                                                <th style="padding:6px 8px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);">谷段</th>
+                                                <th style="padding:6px 8px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);">深谷</th>
+                                                <th style="padding:6px 8px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);">尖段</th>
+                                                <th style="padding:6px 8px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);">峰段</th>
+                                                <th style="padding:6px 8px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);">平段</th>
+                                                <th style="padding:6px 8px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);">谷段</th>
+                                                <th style="padding:6px 8px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);">深谷</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td rowspan="3" style="text-align:center;vertical-align:middle;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);font-weight:500;background:#FAFAFA;">单一制</td>
+                                                <td style="padding:6px 10px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">不满1千伏</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3218</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">1.0444</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.6720</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3611</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3218</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding:6px 10px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">1-10千伏</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3218</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">1.0096</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.6520</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3534</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3218</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding:6px 10px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">35千伏</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3218</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.9748</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.6320</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3458</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3218</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                            </tr>
+                                            <tr><td rowspan="4" style="text-align:center;vertical-align:middle;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);font-weight:500;background:#FAFAFA;">两部制</td>
+                                                <td style="padding:6px 10px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">1-10千伏</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3218</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.9772</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.6334</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3463</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3108</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding:6px 10px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">35千伏</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3218</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.9332</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.6081</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3367</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3031</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding:6px 10px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">110千伏</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3218</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.8895</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.5830</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3271</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.2954</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding:6px 10px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">220千伏及以上</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3218</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.8458</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.5579</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.3175</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-secondary);">0.2878</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                                <td style="padding:6px 8px;text-align:center;border-bottom:1px solid var(--border-light);color:var(--text-disabled);">--</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- 时段信息 -->
+                                <div style="border:1px solid var(--border-light);border-radius:var(--radius-md);padding:12px 16px;margin-bottom:12px;">
+                                    <div style="font-size:13px;font-weight:500;color:var(--primary);margin-bottom:8px;">时段配置</div>
+                                    <div class="time-groups">
+                                        <div class="time-group">
+                                            <div class="time-group-header">
+                                                <span class="time-group-name" style="color:var(--text-secondary);">时段事件1</span>
+                                                <span class="time-group-scope-label">适用范围：</span>
+                                                <label class="time-group-scope-item" style="cursor:default;opacity:0.7;"><input type="checkbox" checked disabled> 单一制-不满1千伏</label>
+                                                <label class="time-group-scope-item" style="cursor:default;opacity:0.7;"><input type="checkbox" checked disabled> 单一制-1-10千伏</label>
+                                                <label class="time-group-scope-item" style="cursor:default;opacity:0.7;"><input type="checkbox" checked disabled> 单一制-35千伏</label>
+                                                <label class="time-group-scope-item" style="cursor:default;opacity:0.7;"><input type="checkbox" checked disabled> 两部制-1-10千伏</label>
+                                                <label class="time-group-scope-item" style="cursor:default;opacity:0.7;"><input type="checkbox" checked disabled> 两部制-35千伏</label>
+                                                <label class="time-group-scope-item" style="cursor:default;opacity:0.7;"><input type="checkbox" checked disabled> 两部制-110千伏</label>
+                                                <label class="time-group-scope-item" style="cursor:default;opacity:0.7;"><input type="checkbox" checked disabled> 两部制-220千伏及以上</label>
+                                            </div>
+                                            <div class="time-group-body">
+                                                <div class="time-row">
+                                                    <select class="time-select" disabled style="color:var(--text-secondary);"><option>谷时</option></select>
+                                                    <input class="time-input" type="time" value="00:00" disabled style="color:var(--text-secondary);"><span class="time-sep">至</span><input class="time-input" type="time" value="05:59" disabled style="color:var(--text-secondary);">
+                                                </div>
+                                                <div class="time-row">
+                                                    <select class="time-select" disabled style="color:var(--text-secondary);"><option>峰时</option></select>
+                                                    <input class="time-input" type="time" value="06:00" disabled style="color:var(--text-secondary);"><span class="time-sep">至</span><input class="time-input" type="time" value="07:59" disabled style="color:var(--text-secondary);">
+                                                </div>
+                                                <div class="time-row">
+                                                    <select class="time-select" disabled style="color:var(--text-secondary);"><option>平时</option></select>
+                                                    <input class="time-input" type="time" value="08:00" disabled style="color:var(--text-secondary);"><span class="time-sep">至</span><input class="time-input" type="time" value="10:59" disabled style="color:var(--text-secondary);">
+                                                </div>
+                                                <div class="time-row">
+                                                    <select class="time-select" disabled style="color:var(--text-secondary);"><option>谷时</option></select>
+                                                    <input class="time-input" type="time" value="11:00" disabled style="color:var(--text-secondary);"><span class="time-sep">至</span><input class="time-input" type="time" value="13:59" disabled style="color:var(--text-secondary);">
+                                                </div>
+                                                <div class="time-row">
+                                                    <select class="time-select" disabled style="color:var(--text-secondary);"><option>平时</option></select>
+                                                    <input class="time-input" type="time" value="14:00" disabled style="color:var(--text-secondary);"><span class="time-sep">至</span><input class="time-input" type="time" value="15:59" disabled style="color:var(--text-secondary);">
+                                                </div>
+                                                <div class="time-row">
+                                                    <select class="time-select" disabled style="color:var(--text-secondary);"><option>峰时</option></select>
+                                                    <input class="time-input" type="time" value="16:00" disabled style="color:var(--text-secondary);"><span class="time-sep">至</span><input class="time-input" type="time" value="21:59" disabled style="color:var(--text-secondary);">
+                                                </div>
+                                                <div class="time-row">
+                                                    <select class="time-select" disabled style="color:var(--text-secondary);"><option>平时</option></select>
+                                                    <input class="time-input" type="time" value="22:00" disabled style="color:var(--text-secondary);"><span class="time-sep">至</span><input class="time-input" type="time" value="22:59" disabled style="color:var(--text-secondary);">
+                                                </div>
+                                                <div class="time-row">
+                                                    <select class="time-select" disabled style="color:var(--text-secondary);"><option>谷时</option></select>
+                                                    <input class="time-input" type="time" value="23:00" disabled style="color:var(--text-secondary);"><span class="time-sep">至</span><input class="time-input" type="time" value="23:59" disabled style="color:var(--text-secondary);">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-default" onclick="hideHistoryModal()">关闭</button></div>
+                </div>
+            </div>
+            <!-- ===== BATCH PUBLISH MODAL ===== -->
+            <div id="batchModal" class="modal-overlay" style="display:none;">
+                <div class="modal-md" style="background:var(--bg-white);border-radius:var(--radius-lg);overflow:hidden;">
+                    <div class="modal-header">
+                        <h3>批量发布</h3>
+                        <span class="modal-close" onclick="hideModal('batchModal')">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                            <div class="filter-group">
+                                <span class="filter-label">省份：</span>
+                                <select class="filter-select" id="batchProvinceFilter" style="width:120px;" onchange="filterBatchTable()">
+                                    <option value="all">全部</option>
+                                    <option value="浙江">浙江</option><option value="上海">上海</option>
+                                    <option value="广东">广东</option><option value="江苏">江苏</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <span class="filter-label">月份：</span>
+                                <select class="filter-select" id="batchMonthFilter" style="width:120px;" onchange="filterBatchTable()">
+                                    <option value="all">全部</option>
+                                    <option value="2026-06">2026-06</option>
+                                    <option value="2026-07">2026-07</option>
+                                    <option value="2026-08">2026-08</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                            <div class="batch-select-all">
+                                <input type="checkbox" id="batchSelectAll" onchange="toggleBatchSelectAll()">
+                                <label for="batchSelectAll" style="font-size:14px;color:var(--text-primary);cursor:pointer;">全选</label>
+                                <span style="font-size:13px;color:var(--text-secondary);margin-left:8px;">已选 <strong id="batchSelectedCount" style="color:var(--primary);">0</strong> 条</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="doBatchPublish()">一键发布</button>
+                        </div>
+                        <div style="max-height:350px;overflow-y:auto;border:1px solid var(--border-light);border-radius:var(--radius-md);">
+                            <table class="data-table" id="batchTable">
+                                <thead>
+                                    <tr>
+                                        <th style="width:40px;text-align:center;"><input type="checkbox" id="batchTableSelectAll" onchange="toggleBatchTableSelectAll()"></th>
+                                        <th>省份</th>
+                                        <th>月份</th>
+                                        <th>创建时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-province="浙江" data-month="2026-06" class="batch-row">
+                                        <td style="text-align:center;"><input type="checkbox" class="batch-row-cb" onchange="updateBatchCount()"></td>
+                                        <td>浙江</td><td>2026-06</td><td>2026-06-01 09:56:04</td>
+                                    </tr>
+                                    <tr data-province="浙江" data-month="2026-07" class="batch-row">
+                                        <td style="text-align:center;"><input type="checkbox" class="batch-row-cb" onchange="updateBatchCount()"></td>
+                                        <td>浙江</td><td>2026-07</td><td>2026-06-02 15:00:00</td>
+                                    </tr>
+                                    <tr data-province="上海" data-month="2026-06" class="batch-row">
+                                        <td style="text-align:center;"><input type="checkbox" class="batch-row-cb" onchange="updateBatchCount()"></td>
+                                        <td>上海</td><td>2026-06</td><td>2026-06-01 10:30:00</td>
+                                    </tr>
+                                    <tr data-province="广东" data-month="2026-06" class="batch-row">
+                                        <td style="text-align:center;"><input type="checkbox" class="batch-row-cb" onchange="updateBatchCount()"></td>
+                                        <td>广东</td><td>2026-06</td><td>2026-06-01 11:00:00</td>
+                                    </tr>
+                                    <tr data-province="广东" data-month="2026-07" class="batch-row">
+                                        <td style="text-align:center;"><input type="checkbox" class="batch-row-cb" onchange="updateBatchCount()"></td>
+                                        <td>广东</td><td>2026-07</td><td>2026-06-02 16:00:00</td>
+                                    </tr>
+                                    <tr data-province="江苏" data-month="2026-05" class="batch-row batch-row-expired" style="opacity:0.5;">
+                                        <td style="text-align:center;"><input type="checkbox" class="batch-row-cb" onchange="updateBatchCount()" disabled></td>
+                                        <td>江苏</td><td>2026-05</td><td>2026-05-01 09:00:00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ===== EDIT DRAWER ===== -->
+            <div id="modal-detail" class="modal-overlay" style="display:none;">
+                <div class="modal-drawer">
+                    <div class="modal-header">
+                        <h3>编辑</h3>
+                        <span class="modal-close" onclick="hideModal('modal-detail')">&times;</span>
+                    </div>
+                    <div class="modal-body" style="max-height:calc(100vh - 140px);overflow-y:auto;">
+                        <!-- 省份信息 -->
+                        <div style="margin-bottom:16px;">
+                            <div class="section-title">省份信息</div>
+                            <div style="display:flex;gap:32px;padding:12px 0;">
+                                <div><span style="font-size:13px;color:var(--text-secondary);">省份：</span><span style="font-size:14px;color:var(--text-primary);font-weight:500;">浙江省</span></div>
+                                <div><span style="font-size:13px;color:var(--text-secondary);">月份：</span><span style="font-size:14px;color:var(--text-primary);font-weight:500;">2026.07</span></div>
+                            </div>
+                        </div>
+
+                        <!-- 价格信息（统一表格，含星星代理预估电价） -->
+                        <div style="margin-bottom:20px;">
+                            <div class="section-title">价格信息 <span style="font-size:13px;color:var(--text-secondary);font-weight:400;">(单位：元/kWh)</span></div>
+                            <div style="background:var(--bg-white);border:1px solid var(--border-light);border-radius:var(--radius-lg);overflow-x:auto;">
+                                <table style="width:100%;min-width:1400px;border-collapse:collapse;font-size:13px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="padding:12px 16px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;" rowspan="2">用电性质</th>
+                                            <th style="padding:12px 16px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;" rowspan="2">电压等级</th>
+                                            <th style="padding:12px 16px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);border-right:1px solid var(--border-light);min-width:140px;" rowspan="2">电网代理购电价</th>
+                                            <th colspan="5" style="padding:10px 16px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);font-weight:500;color:var(--text-primary);border-right:1px solid var(--border-light);">电网代理到户电价</th>
+                                            <th colspan="5" style="padding:10px 16px;text-align:center;background:var(--table-header);border-bottom:1px solid var(--border-light);font-weight:500;color:var(--text-primary);">星星代理预估电价</th>
+                                        </tr>
+                                        <tr>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">尖段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">峰段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">平段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">谷段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">深谷</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">尖段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">峰段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">平段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);border-right:1px solid var(--border-light);min-width:100px;">谷段</th>
+                                            <th style="padding:8px 12px;text-align:center;background:var(--table-header);border-bottom:2px solid var(--border-light);min-width:100px;">深谷</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- 单一制 -->
+                                        <tr>
+                                            <td rowspan="3" style="padding:0;text-align:center;vertical-align:middle;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);font-weight:500;">单一制</td>
+                                            <td style="padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">不满1千伏</td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.32180000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="1.04440000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.67200000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.36110000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">1-10千伏</td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.32180000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="1.00960000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.65200000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.35340000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">35千伏</td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.32180000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.97480000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.63200000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.34580000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                        </tr>
+                                        <!-- 两部制 -->
+                                        <tr>
+                                            <td rowspan="4" style="padding:0;text-align:center;vertical-align:middle;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);font-weight:500;">两部制</td>
+                                            <td style="padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">1-10千伏</td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.32180000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.97720000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.63340000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.34630000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.31080000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">35千伏</td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.32180000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.93320000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.60810000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.33670000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.30310000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">110千伏</td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.32180000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.88950000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.58300000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.32710000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.29540000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:8px 12px;text-align:center;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">220千伏及以上</td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.32180000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.84580000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.55790000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.31750000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" value="0.28780000" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                            <td style="padding:6px 8px;border-bottom:1px solid var(--border-light);"><input type="number" step="0.0001" placeholder="请输入" style="width:100%;height:30px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;" /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 时段信息（统一配置） -->
+                        <div style="margin-bottom:12px;">
+                            <div class="section-title" style="display:flex;align-items:center;justify-content:space-between;">
+                                <span>时段信息</span>
+                                <button class="btn btn-default" onclick="addTimeGroup('edit-time-groups')" style="height:28px;padding:0 12px;font-size:13px;">+ 添加时段事件</button>
+                            </div>
+                            <div style="padding:0;">
+                                <div id="edit-time-groups" class="time-groups">
+                                    <div class="time-group">
+                                        <div class="time-group-header">
+                                            <span class="time-group-name">时段事件1</span>
+                                            <span class="time-group-scope-label">适用范围：</span>
+                                            <label class="time-group-scope-item"><input type="checkbox" value="单一制-不满1千伏" checked onchange="syncTimeGroupScopes(this)"> 单一制-不满1千伏</label>
+                                            <label class="time-group-scope-item"><input type="checkbox" value="单一制-1-10千伏" checked onchange="syncTimeGroupScopes(this)"> 单一制-1-10千伏</label>
+                                            <label class="time-group-scope-item"><input type="checkbox" value="单一制-35千伏" checked onchange="syncTimeGroupScopes(this)"> 单一制-35千伏</label>
+                                            <label class="time-group-scope-item"><input type="checkbox" value="两部制-1-10千伏" checked onchange="syncTimeGroupScopes(this)"> 两部制-1-10千伏</label>
+                                            <label class="time-group-scope-item"><input type="checkbox" value="两部制-35千伏" checked onchange="syncTimeGroupScopes(this)"> 两部制-35千伏</label>
+                                            <label class="time-group-scope-item"><input type="checkbox" value="两部制-110千伏" checked onchange="syncTimeGroupScopes(this)"> 两部制-110千伏</label>
+                                            <label class="time-group-scope-item"><input type="checkbox" value="两部制-220千伏及以上" checked onchange="syncTimeGroupScopes(this)"> 两部制-220千伏及以上</label>
+                                            <span class="time-group-remove" onclick="removeTimeGroup(this)" style="display:none;">删除</span>
+                                        </div>
+                                        <div class="time-group-body">
+                                            <div class="time-add" onclick="addTimeRow(this)">+ 添加时间段</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" onclick="hideModal('modal-detail')">取消</button>
+                        <button class="btn btn-publish" onclick="saveAndPublish()">保存并发布</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Demo Nav -->
+            <div class="demo-nav">
+                <span style="color:var(--text-secondary);font-size:13px;margin-right:12px;">Demo页面切换：</span>
+                <button class="demo-btn active" onclick="showPage('list')">列表页</button>
+                <button class="demo-btn" onclick="showCreateModal()">新增弹窗</button>
+                <button class="demo-btn" onclick="showModal('modal-detail')">编辑弹窗</button>
+                <button class="demo-btn" onclick="showUploadModal()">批量上传</button>
+                <button class="demo-btn" onclick="showModal('batchModal')">批量发布</button>
+                <button class="demo-btn" onclick="showModal('historyModal')">历史记录</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function showPage(id) {
+        document.getElementById('page-' + id).style.display = 'block';
+        document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+        var map = {'list':'列表','create':'新增','detail':'编辑','upload':'上传','batch':'发布','history':'历史'};
+        document.querySelectorAll('.demo-btn').forEach(b => {
+            if (b.textContent.includes(map[id] || '')) b.classList.add('active');
+        });
+    }
+    function showCreateModal() { document.getElementById('createModal').style.display = 'flex'; updateAvailableProvinces(); }
+    function hideCreateModal() { document.getElementById('createModal').style.display = 'none'; }
+
+    // 编辑弹窗"保存并发布"：更新对应省份状态为已发布
+    function saveAndPublish() {
+        // 模拟：编辑弹窗当前展示的是浙江省（demo数据中第一个编辑按钮对应浙江）
+        var rows = document.querySelectorAll('#page-list .data-table tbody tr');
+        if (rows.length > 0) {
+            var row = rows[0]; // 浙江（已发布 → 重新发布也保持已发布）
+            // 如果该行是待发布则更新，否则保持已发布
+            var badge = row.querySelector('.badge');
+            if (badge && badge.textContent !== '已发布') {
+                badge.textContent = '已发布';
+                badge.className = 'badge badge-published';
+                // 禁用发布按钮
+                var actionLinks = row.querySelectorAll('.action-link');
+                for (var i = 0; i < actionLinks.length; i++) {
+                    if (actionLinks[i].textContent.trim() === '发布') {
+                        actionLinks[i].className = 'action-link disabled';
+                        actionLinks[i].removeAttribute('onclick');
+                        break;
+                    }
+                }
+                // 更新发布时间
+                var now = new Date();
+                var pad = function(n) { return (n < 10 ? '0' : '') + n; };
+                var timeStr = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate())
+                    + ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+                var timeCells = row.querySelectorAll('td');
+                if (timeCells.length >= 5) timeCells[4].textContent = timeStr;
+            }
+        }
+        hideModal('modal-detail');
+        alert('保存并发布成功！');
+    }
+
+    function showUploadModal() {
+        document.getElementById('uploadModal').style.display = 'flex';
+        currentUploadStep = 1; updateUploadStepUI();
+        resetValidation();
+    }
+    function hideUploadModal() { document.getElementById('uploadModal').style.display = 'none'; }
+    var currentUploadStep = 1;
+    var validationDone = false;
+    var validationResults = {};  // pid -> {pass: true/false, errors: [...]}
+
+    function prevUploadStep() {
+        if (currentUploadStep > 1) {
+            // 如果从第5步回退，重置完成状态
+            if (currentUploadStep === 5) {
+                // 保持校验结果不变，仅回退步骤
+            }
+            currentUploadStep--;
+            updateUploadStepUI();
+        }
+    }
+
+    function nextUploadStep() {
+        if (currentUploadStep === 4 && !validationDone) {
+            doValidate();
+            return;
+        }
+        if (currentUploadStep === 4 && validationDone) {
+            // Check if any failed provinces exist
+            var hasFail = false;
+            for (var pid in validationResults) {
+                if (!validationResults[pid].pass) { hasFail = true; break; }
+            }
+            if (hasFail) {
+                // Ask if user wants to proceed with passing provinces only
+                if (!confirm('部分省份未通过校验，确认仅上传通过校验的省份吗？')) return;
+            }
+            // Proceed to step 5
+            currentUploadStep = 5;
+            updateUploadStepUI();
+            return;
+        }
+        if (currentUploadStep < 5) { currentUploadStep++; updateUploadStepUI(); }
+        else { hideUploadModal(); }
+    }
+
+    function doValidate() {
+        validationDone = true;
+        validationResults = {};
+        var rows = document.querySelectorAll('.prow');
+        var periodNames = ['尖段', '峰段', '平段', '谷段', '深谷'];
+
+        rows.forEach(function(r) {
+            var pid = r.getAttribute('data-pid');
+            var province = r.getAttribute('data-province');
+            var recordsStr = r.getAttribute('data-records');
+            var records = JSON.parse(recordsStr);
+            var errors = [];
+
+            // Demo校验：模拟已存在的电价时段记录
+            if (province === '上海') {
+                errors.push('2026-07月份上海的电价时段记录已存在');
+            }
+
+            records.forEach(function(rec) {
+                var prices = [rec.jd, rec.fd, rec.pd, rec.gd, rec.sgd];
+                for (var j = 0; j < prices.length - 1; j++) {
+                    var p1 = parseFloat(prices[j]);
+                    var p2 = parseFloat(prices[j+1]);
+                    if (!isNaN(p1) && !isNaN(p2)) {
+                        if (p1 < p2) {
+                            errors.push(rec.usage + '-' + rec.voltage + '：'
+                                + periodNames[j] + '(' + p1.toFixed(4) + ') < '
+                                + periodNames[j+1] + '(' + p2.toFixed(4) + ')，不满足依次降低');
+                        }
+                    }
+                }
+            });
+
+            validationResults[pid] = {
+                pass: errors.length === 0,
+                name: province,
+                errors: errors
+            };
+        });
+
+        // Update UI - apply province-level validation to all rows in each group
+        var passCount = 0, failCount = 0;
+        rows.forEach(function(r) {
+            var pid = r.getAttribute('data-pid');
+            var badge = r.querySelector('.v-badge');
+            // Also affect sub-rows of the same province group
+            var groupRows = [r].concat([].slice.call(document.querySelectorAll('.prow-rec[data-pid="' + pid + '"]')));
+            if (validationResults[pid].pass) {
+                badge.className = 'v-badge v-pass';
+                badge.textContent = '通过';
+                groupRows.forEach(function(tr) { tr.classList.add('v-row-pass'); });
+                passCount++;
+            } else {
+                badge.className = 'v-badge v-fail';
+                badge.textContent = '失败';
+                groupRows.forEach(function(tr) { tr.classList.add('v-row-fail'); });
+                failCount++;
+            }
+        });
+
+        // Update summary bar
+        var summary = document.getElementById('validationSummary');
+        summary.style.display = 'block';
+        if (failCount === 0) {
+            summary.className = 'v-pass-bar';
+            summary.style.cssText = summary.style.cssText + 'margin-bottom:16px;padding:12px 16px;border-radius:var(--radius-md);font-size:13px;';
+            summary.innerHTML = '<strong style="color:var(--success);">\u2713 全部通过</strong> \u2014 ' + passCount + ' 个省份共 ' + [].reduce.call(rows, function(s, r) {
+                return s + JSON.parse(r.getAttribute('data-records')).length;
+            }, 0) + ' 条记录均符合电价依次降低规则';
+        } else if (passCount > 0) {
+            summary.className = 'v-partial-bar';
+            summary.style.cssText = summary.style.cssText + 'margin-bottom:16px;padding:12px 16px;border-radius:var(--radius-md);font-size:13px;';
+            summary.innerHTML = '<strong style="color:#faad14;">\u26a0 部分通过</strong> \u2014 ' + passCount + ' 个省份通过，<strong style="color:var(--error);">' + failCount + ' 个省份未通过</strong>，可继续上传通过校验的省份';
+        } else {
+            summary.className = 'v-fail-bar';
+            summary.style.cssText = summary.style.cssText + 'margin-bottom:16px;padding:12px 16px;border-radius:var(--radius-md);font-size:13px;';
+            summary.innerHTML = '<strong style="color:var(--error);">\u2717 全部未通过</strong> \u2014 请返回修改后重新上传';
+        }
+
+        // Show error details
+        var details = document.getElementById('validationDetails');
+        var detailList = document.getElementById('validationDetailList');
+        details.style.display = 'block';
+        detailList.innerHTML = '';
+        for (var pid in validationResults) {
+            if (!validationResults[pid].pass) {
+                var item = document.createElement('div');
+                item.className = 'v-error-item';
+                item.innerHTML = '<strong style="color:var(--error);">' + validationResults[pid].name + '</strong> \u2014 ' + validationResults[pid].errors.length + ' 条错误：<br>';
+                validationResults[pid].errors.forEach(function(e) {
+                    item.innerHTML += '<span style="color:var(--text-secondary);font-size:12px;">\u00a0\u00a0\u2022 ' + e + '</span><br>';
+                });
+                detailList.appendChild(item);
+            }
+        }
+
+        // Update button
+        var btn = document.getElementById('uploadNextBtn');
+        if (failCount === 0) {
+            btn.textContent = '确认上传';
+            setTimeout(function() {
+                if (confirm('全部通过校验，确认上传？')) {
+                    currentUploadStep = 5; updateUploadStepUI();
+                }
+            }, 300);
+        } else if (passCount > 0) {
+            btn.textContent = '仅上传通过校验的省份';
+        } else {
+            btn.textContent = '返回修改';
+            btn.onclick = function() { currentUploadStep = 3; validationDone = false; updateUploadStepUI(); };
+        }
+    }
+
+    function resetValidation() {
+        validationDone = false;
+        validationResults = {};
+        document.querySelectorAll('.prow, .prow-rec').forEach(function(r) {
+            r.classList.remove('v-row-pass', 'v-row-fail');
+        });
+        document.querySelectorAll('.prow').forEach(function(r) {
+            var badge = r.querySelector('.v-badge');
+            badge.className = 'v-badge v-pending';
+            badge.textContent = '待校验';
+        });
+        document.getElementById('validationSummary').style.display = 'none';
+        document.getElementById('validationDetails').style.display = 'none';
+    }
+
+    function updateUploadStepUI() {
+        for (var i = 1; i <= 5; i++) {
+            var el = document.getElementById('uploadStep' + i);
+            if (el) el.style.display = (i === currentUploadStep) ? 'block' : 'none';
+        }
+        // 更新"下一步"按钮
+        var btn = document.getElementById('uploadNextBtn');
+        if (btn) {
+            if (currentUploadStep === 4) {
+                if (!validationDone) btn.textContent = '确认上传';
+                else btn.textContent = '仅上传通过校验的省份';
+            } else if (currentUploadStep === 5) {
+                btn.textContent = '完成';
+            } else {
+                btn.textContent = '下一步';
+            }
+            btn.onclick = nextUploadStep;
+        }
+        // 更新"上一步"按钮：第1步显示"取消"，第2-4步显示"上一步"，第5步隐藏
+        var prevBtn = document.getElementById('uploadPrevBtn');
+        if (prevBtn) {
+            if (currentUploadStep === 5) {
+                prevBtn.style.display = 'none';
+            } else {
+                prevBtn.style.display = '';
+                if (currentUploadStep === 1) {
+                    prevBtn.textContent = '取消';
+                    prevBtn.onclick = hideUploadModal;
+                } else {
+                    prevBtn.textContent = '上一步';
+                    prevBtn.onclick = prevUploadStep;
+                }
+            }
+        }
+        if (currentUploadStep === 5) { renderUploadResult(); }
+    }
+
+    function renderUploadResult() {
+        var container = document.getElementById('uploadResult');
+        var passCount = 0, failCount = 0, passNames = [], failNames = [];
+        for (var pid in validationResults) {
+            if (validationResults[pid].pass) { passCount++; passNames.push(validationResults[pid].name); }
+            else { failCount++; failNames.push(validationResults[pid].name); }
+        }
+        var total = passCount + failCount;
+        var html = '';
+        if (failCount === 0) {
+            html += '<div style="font-size:48px;margin-bottom:16px;color:var(--success);">&#10003;</div>';
+            html += '<div style="font-size:16px;font-weight:500;color:var(--success);margin-bottom:8px;">上传完成</div>';
+            var totalRecs = [].reduce.call(document.querySelectorAll('.prow'), function(s, r) {
+                return s + JSON.parse(r.getAttribute('data-records')).length;
+            }, 0);
+            html += '<div style="font-size:13px;color:var(--text-secondary);">已成功上传 ' + passCount + ' 个省份共 ' + totalRecs + ' 条电价记录，请在列表中查看并发布</div>';
+        } else if (failCount > 0 && passCount > 0) {
+            html += '<div style="font-size:48px;margin-bottom:16px;color:#faad14;">&#9888;</div>';
+            html += '<div style="font-size:16px;font-weight:500;color:#faad14;margin-bottom:8px;">部分上传完成</div>';
+            html += '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">已成功上传 ' + passCount + ' 个省份，' + failCount + ' 个省份因校验未通过被跳过</div>';
+            // Show passing provinces
+            html += '<div style="text-align:left;margin:0 auto;max-width:400px;padding:12px 16px;background:#f6ffed;border-radius:var(--radius-md);border:1px solid #b7eb8f;margin-bottom:8px;">';
+            html += '<div style="font-size:13px;font-weight:500;color:var(--success);margin-bottom:4px;">✓ 已上传的省份：</div>';
+            passNames.forEach(function(n) { html += '<span style="font-size:12px;color:var(--text-secondary);">' + n + ' </span>'; });
+            html += '</div>';
+            // Show failing provinces
+            html += '<div style="text-align:left;margin:0 auto;max-width:400px;padding:12px 16px;background:#fff2f0;border-radius:var(--radius-md);border:1px solid #ffccc7;">';
+            html += '<div style="font-size:13px;font-weight:500;color:var(--error);margin-bottom:4px;">✗ 未通过的省份：</div>';
+            failNames.forEach(function(n) { html += '<span style="font-size:12px;color:var(--text-secondary);">' + n + ' </span>'; });
+            html += '<div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">请修正数据后重新上传</div></div>';
+        } else {
+            html += '<div style="font-size:48px;margin-bottom:16px;color:var(--error);">&#10007;</div>';
+            html += '<div style="font-size:16px;font-weight:500;color:var(--error);margin-bottom:8px;">上传失败</div>';
+            html += '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">全部 ' + failCount + ' 个省份均未通过校验</div>';
+            html += '<div style="text-align:left;margin:0 auto;max-width:400px;padding:12px 16px;background:#fff2f0;border-radius:var(--radius-md);border:1px solid #ffccc7;">';
+            html += '<div style="font-size:13px;font-weight:500;color:var(--error);margin-bottom:4px;">✗ 未通过的省份：</div>';
+            failNames.forEach(function(n) { html += '<span style="font-size:12px;color:var(--text-secondary);">' + n + ' </span>'; });
+            html += '<div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">请修正数据后重新上传</div></div>';
+        }
+        container.innerHTML = html;
+    }
+    function hideHistoryModal() { document.getElementById('historyModal').style.display = 'none'; }
+    function showHistoryModal() { document.getElementById('historyModal').style.display = 'flex'; }
+    function showModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function hideModal(id) { document.getElementById(id).style.display = 'none'; }
+    // 已有数据的省份映射（月份 → 省份列表）
+    var existingPriceData = {
+        '2026-05': ['江苏'],
+        '2026-06': ['浙江', '上海', '广东'],
+        '2026-07': ['浙江', '广东']
+    };
+
+    function updateAvailableProvinces() {
+        var monthInput = document.getElementById('createMonth');
+        var provSelect = document.getElementById('createProvince');
+        if (!monthInput || !provSelect) return;
+        var month = monthInput.value;
+        var occupied = existingPriceData[month] || [];
+        // 遍历所有option，置灰已配置的省份
+        for (var i = 0; i < provSelect.options.length; i++) {
+            var opt = provSelect.options[i];
+            if (opt.value && occupied.indexOf(opt.value) >= 0) {
+                opt.disabled = true;
+                if (opt.selected) opt.selected = false;
+            } else {
+                opt.disabled = false;
+            }
+        }
+    }
+
+    function publishRow(el) {
+        var row = el.closest('tr');
+        var province = row.querySelector('td:first-child').textContent.trim();
+        if (confirm('确认发布【' + province + '】的电价配置？')) {
+            // 更新状态badge
+            row.querySelector('.badge').textContent = '已发布';
+            row.querySelector('.badge').className = 'badge badge-published';
+            // 禁用发布按钮
+            el.className = 'action-link disabled';
+            el.removeAttribute('onclick');
+            // 更新发布时间
+            var now = new Date();
+            var pad = function(n) { return (n < 10 ? '0' : '') + n; };
+            var timeStr = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate())
+                + ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+            var timeCells = row.querySelectorAll('td');
+            // 发布时间在第5列（索引4）
+            if (timeCells.length >= 5) {
+                timeCells[4].textContent = timeStr;
+            }
+            alert('发布成功！');
+        }
+    }
+    function toggleBatchSelectAll() {
+        var cb = document.getElementById('batchSelectAll');
+        var tc = document.getElementById('batchTableSelectAll');
+        tc.checked = cb.checked;
+        document.querySelectorAll('.batch-row-cb').forEach(c => {
+            var r = c.closest('.batch-row');
+            if (r && r.style.display !== 'none' && !r.classList.contains('batch-row-expired')) c.checked = cb.checked;
+        });
+        updateBatchCount();
+    }
+    function toggleBatchTableSelectAll() {
+        var tc = document.getElementById('batchTableSelectAll');
+        var cb = document.getElementById('batchSelectAll');
+        cb.checked = tc.checked;
+        document.querySelectorAll('.batch-row-cb').forEach(c => {
+            var r = c.closest('.batch-row');
+            if (r && r.style.display !== 'none' && !r.classList.contains('batch-row-expired')) c.checked = tc.checked;
+        });
+        updateBatchCount();
+    }
+    function updateBatchCount() {
+        var n = document.querySelectorAll('.batch-row-cb:checked:not(:disabled)').length;
+        document.getElementById('batchSelectedCount').textContent = n;
+    }
+    function doBatchPublish() {
+        var sel = document.querySelectorAll('.batch-row-cb:checked:not(:disabled)');
+        if (sel.length === 0) { alert('请先选择要发布的配置'); return; }
+        if (!confirm('确认批量发布选中的 ' + sel.length + ' 条配置？')) return;
+        sel.forEach(function(cb) { var r = cb.closest('.batch-row'); r.style.opacity = '0.5'; cb.checked = false; cb.disabled = true; });
+        document.getElementById('batchSelectAll').checked = false;
+        document.getElementById('batchTableSelectAll').checked = false;
+        updateBatchCount();
+        alert('成功发布 ' + sel.length + ' 条配置！');
+    }
+    function filterBatchTable() {
+        var p = document.getElementById('batchProvinceFilter').value;
+        var m = document.getElementById('batchMonthFilter').value;
+        document.querySelectorAll('.batch-row').forEach(function(r) {
+            var rp = r.getAttribute('data-province') || '', rm = r.getAttribute('data-month') || '', show = true;
+            if (p !== 'all' && rp !== p) show = false;
+            if (m !== 'all' && rm !== m) show = false;
+            r.style.display = show ? '' : 'none';
+        });
+    }
+    document.querySelectorAll('.modal-overlay').forEach(function(o) {
+        o.addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; });
+    });
+    showPage('list');
+
+    // 时段增删（仅最后一条显示删除按钮）
+    function addTimeRow(el) {
+        var container = el.parentNode;
+        var rows = container.querySelectorAll('.time-row');
+        if (rows.length === 0) { container.insertBefore(createTimeRow('00:00', ''), el); return; }
+
+        var lastRow = rows[rows.length - 1];
+        var lastStart = lastRow.querySelectorAll('.time-input')[0].value;
+        var lastEnd = lastRow.querySelectorAll('.time-input')[1].value;
+
+        // 结束时间不能为空
+        if (!lastEnd) {
+            alert('请先填写上一条时段的结束时间，再添加新时段');
+            return;
+        }
+
+        // 结束时间必须大于开始时间
+        if (lastEnd <= lastStart) {
+            alert('结束时间必须大于开始时间，请检查上一条时段');
+            return;
+        }
+
+        // 如果最后一条结束时间是 23:59，说明已覆盖全天，禁止添加
+        if (lastEnd === '23:59') {
+            alert('时段已覆盖全天 00:00~23:59，无法继续添加');
+            return;
+        }
+
+        // 校验连续：每条的开始必须等于上条的结束 + 1 分钟
+        for (var i = 0; i < rows.length - 1; i++) {
+            var curEnd = rows[i].querySelectorAll('.time-input')[1].value;
+            var nextStart = rows[i + 1].querySelectorAll('.time-input')[0].value;
+            if (incrementTime(curEnd) !== nextStart) {
+                alert('时段区间不连续，请先调整已有时段');
+                return;
+            }
+        }
+
+        // 新行开始时间 = 上一条结束时间 + 1 分钟，结束时间留空让用户填写
+        var newStart = incrementTime(lastEnd);
+
+        // 移除上一条（现在变为倒数第二条）的删除按钮
+        var oldLastRemove = lastRow.querySelector('.time-remove');
+        if (oldLastRemove) oldLastRemove.remove();
+
+        container.insertBefore(createTimeRow(newStart, ''), el);
+    }
+
+    function createTimeRow(start, end) {
+        var endHtml = end ? 'value="' + end + '"' : 'placeholder="结束时间"';
+        var row = document.createElement('div');
+        row.className = 'time-row';
+        row.innerHTML = '<select class="time-select"><option>谷时</option><option>峰时</option><option selected>平时</option><option>尖时</option><option>深谷</option></select>'
+            + '<input class="time-input" type="time" value="' + start + '">'
+            + '<span class="time-sep">至</span>'
+            + '<input class="time-input" type="time" ' + endHtml + '>'
+            + '<span class="time-remove" onclick="removeTimeRow(this)">&times;</span>';
+        return row;
+    }
+
+    function removeTimeRow(el) {
+        var row = el.closest ? el.closest('.time-row') : (el.parentNode.className === 'time-row' ? el.parentNode : null);
+        var container = row.parentNode;
+        var rows = container.querySelectorAll('.time-row');
+        if (rows.length <= 1) {
+            alert('至少保留一个时段');
+            return;
+        }
+
+        container.removeChild(row);
+
+        // 给新的最后一条加上删除按钮
+        var remainRows = container.querySelectorAll('.time-row');
+        var newLast = remainRows[remainRows.length - 1];
+        if (newLast && !newLast.querySelector('.time-remove')) {
+            newLast.insertAdjacentHTML('beforeend', '<span class="time-remove" onclick="removeTimeRow(this)">&times;</span>');
+        }
+    }
+
+    function incrementTime(timeStr) {
+        var parts = timeStr.split(':');
+        var hour = parseInt(parts[0], 10);
+        var minute = parseInt(parts[1], 10);
+        minute++;
+        if (minute >= 60) { minute = 0; hour++; }
+        if (hour >= 24) return '23:59';
+        return (hour < 10 ? '0' : '') + hour + ':' + (minute < 10 ? '0' : '') + minute;
+    }
+
+    // 时段组增删
+
+    // 时段事件互斥：同一scope value只能被一个时段事件组选中
+    function syncTimeGroupScopes(el) {
+        var container = el.closest('.time-groups');
+        if (!container) return;
+        var allCheckboxes = container.querySelectorAll('.time-group-header input[type="checkbox"]');
+
+        // 收集所有被选中的值
+        var checkedValues = {};
+        allCheckboxes.forEach(function(cb) {
+            if (cb.checked) {
+                checkedValues[cb.value] = true;
+            }
+        });
+
+        // 遍历所有checkbox
+        allCheckboxes.forEach(function(cb) {
+            // 检查同value是否在其他组中被选中
+            var checkedElsewhere = false;
+            allCheckboxes.forEach(function(other) {
+                if (other !== cb && other.value === cb.value && other.checked) {
+                    checkedElsewhere = true;
+                }
+            });
+            if (checkedElsewhere) {
+                cb.checked = false;   // 取消勾选
+                cb.disabled = true;   // 置灰不可选
+            } else {
+                cb.disabled = false;  // 未被其他组占用，可操作
+            }
+        });
+    }
+
+    function addTimeGroup(containerId) {
+        var container = document.getElementById(containerId);
+        var groups = container.querySelectorAll('.time-group');
+        var num = groups.length + 1;
+
+        // 如果之前只有1组，显示其删除按钮
+        if (groups.length === 1) {
+            var prevBtn = groups[0].querySelector('.time-group-remove');
+            if (prevBtn) prevBtn.style.display = '';
+        }
+
+        var div = document.createElement('div');
+        div.className = 'time-group';
+        div.innerHTML = '<div class="time-group-header">'
+            + '<span class="time-group-name">时段事件' + num + '</span>'
+            + '<span class="time-group-scope-label">适用范围：</span>'
+            + '<label class="time-group-scope-item"><input type="checkbox" value="单一制-不满1千伏" onchange="syncTimeGroupScopes(this)"> 单一制-不满1千伏</label>'
+            + '<label class="time-group-scope-item"><input type="checkbox" value="单一制-1-10千伏" onchange="syncTimeGroupScopes(this)"> 单一制-1-10千伏</label>'
+            + '<label class="time-group-scope-item"><input type="checkbox" value="单一制-35千伏" onchange="syncTimeGroupScopes(this)"> 单一制-35千伏</label>'
+            + '<label class="time-group-scope-item"><input type="checkbox" value="两部制-1-10千伏" onchange="syncTimeGroupScopes(this)"> 两部制-1-10千伏</label>'
+            + '<label class="time-group-scope-item"><input type="checkbox" value="两部制-35千伏" onchange="syncTimeGroupScopes(this)"> 两部制-35千伏</label>'
+            + '<label class="time-group-scope-item"><input type="checkbox" value="两部制-110千伏" onchange="syncTimeGroupScopes(this)"> 两部制-110千伏</label>'
+            + '<label class="time-group-scope-item"><input type="checkbox" value="两部制-220千伏及以上" onchange="syncTimeGroupScopes(this)"> 两部制-220千伏及以上</label>'
+            + '<span class="time-group-remove" onclick="removeTimeGroup(this)">删除</span>'
+            + '</div>'
+            + '<div class="time-group-body">'
+            + '<div class="time-add" onclick="addTimeRow(this)">+ 添加时间段</div>'
+            + '</div>';
+        container.appendChild(div);
+
+        // 同步新组的互斥状态
+        var firstCb = div.querySelector('.time-group-header input[type="checkbox"]');
+        if (firstCb) syncTimeGroupScopes(firstCb);
+    }
+
+    function removeTimeGroup(el) {
+        var group = el.closest ? el.closest('.time-group') : el.parentNode.parentNode;
+        var container = group.parentNode;
+        if (container.querySelectorAll('.time-group').length <= 1) {
+            alert('至少保留一个时段组');
+            return;
+        }
+        group.remove();
+        // 同步剩余组的互斥状态（被删除组释放的scope应变为可选）
+        var remain = container.querySelectorAll('.time-group');
+        if (remain.length > 0) {
+            var firstCb = remain[0].querySelector('.time-group-header input[type="checkbox"]');
+            if (firstCb) syncTimeGroupScopes(firstCb);
+        }
+        // 只剩1组时隐藏其删除按钮
+        if (remain.length === 1) {
+            var btn = remain[0].querySelector('.time-group-remove');
+            if (btn) btn.style.display = 'none';
+        }
+    }
+</script>
+</body>
+</html>
